@@ -1,0 +1,8 @@
+# folders
+include/
+lib/
+scripts/
+
+# files
+test.py
+scratch.py
