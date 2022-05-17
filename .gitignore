@@ -2,6 +2,7 @@
 include/
 lib/
 scripts/
+.vscode/
 
 # files
 test.py
