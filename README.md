@@ -1,1 +1,3 @@
-# linear_algebra
+# Mathemetics
+
+Implementing maths with Python
