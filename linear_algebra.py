@@ -1,3 +1,5 @@
+import copy
+
 # addition of vector
 def v_add(a, b):
     n = len(a)
@@ -316,8 +318,8 @@ def mat_toeplitz(a, b):
 
     return T
 
-# outer product
-def mat_outer(a, b):
+# outer product of vector
+def v_outer(a, b):
     n1 = len(a)
     n2 = len(b)
     res = []
@@ -331,8 +333,8 @@ def mat_outer(a, b):
 
     return res
 
-# inner product
-def mat_inner(a, b):
+# inner product of vector
+def v_inner(a, b):
     n = len(a)
     res = 0
 
@@ -344,15 +346,94 @@ def mat_inner(a, b):
 # householder matrix
 def householder(v):
     n = len(v)
-    v_outer = mat_outer(v, v)
-    v_inner = mat_inner(v, v)
+    outer = v_outer(v, v)
+    inner = v_inner(v, v)
 
-    V1 = mat_smul(1/v_inner, v_outer)
+    V1 = mat_smul(1/inner, outer)
     V2 = mat_smul(2, V1)
 
     H = mat_sub(mat_identity(n), V2)
 
     return H
+
+# creating augmented matrix
+def aug_mat(a, b):
+    x = copy.deepcopy(a)
+    n = len(a)
+
+    for i in range(n):
+        x[i].append(b[i])
+
+    return x
+
+# separating coefficient matrix
+def sep_mat(a):
+    n = len(a)
+    x, y = [], []
+
+    for i in range(n):
+        x.append(a[i][:-1])
+        y.extend(a[i][-1:])
+
+    return x, y
+
+# pivoting augmented matrix
+def pivot_mat(a, b):
+    mat = aug_mat(a, b)
+
+    mat = sorted(mat, key=lambda x: abs(x[0]), reverse=True)
+
+    return mat
+
+# Gauss-Jordan elimination
+def gauss_jordan_eli(a, b):
+    mat = pivot_mat(a, b)
+    n = len(mat)
+
+    for i in range(n):
+        mat_row = mat[i]
+        tmp = 1/mat_row[i]
+
+        mat_row = [ele * tmp for ele in mat_row]
+        mat[i] = mat_row
+
+        for j in range(n):
+            if i == j:
+                continue
+
+            mat_next = mat[j]
+            mat_tmp = [ele * -mat_next[i] for ele in mat_row]
+
+            for k in range(len(mat_row)):
+                mat_next[k] += mat_tmp[k]
+
+            mat[j] = mat_next
+
+    x, y = sep_mat(mat)
+
+    return y
+
+# Gauss elimination
+def gauss_eli(a, b):
+    mat = pivot_mat(a, b)
+    n = len(mat)
+
+    # gauss elimination
+    for i in range(n):
+        for j in range(i+1, n):
+            tmp = mat[j][i] / mat[i][i]
+            for k in range(n + 1):
+                mat[j][k] -= tmp * mat[i][k]
+
+    # solve equation
+    for i in range(n-1, -1, -1):
+        for k in range(i+1, n):
+            mat[i][n] = mat[i][n] - mat[i][k] * mat[k][n]
+        mat[i][n] /= mat[i][i]
+
+    x, y = sep_mat(mat)
+
+    return y
 
 if __name__ == "__main__":
     a = [1, 2, 3]
@@ -404,3 +485,11 @@ if __name__ == "__main__":
     i = [1, 2, 3, 4]
 
     print(f'\nhouseholder matrix: {householder(i)}')
+
+    x = [[1, 0, -2], [0, 5, 6], [7, 8, 0]]
+    y = [4, 5, 3]
+
+    print(f'\ncreating augmented matrix: {aug_mat(x, y)}')
+    print(f'\nsorting augmented matrix: {pivot_mat(x, y)}')
+    print(f'\nGauss Jordan elimination: {gauss_jordan_eli(x, y)}')
+    print(f'\nGauss elimination: {gauss_eli(x, y)}')
