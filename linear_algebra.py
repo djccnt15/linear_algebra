@@ -367,7 +367,7 @@ def aug_mat(a, b):
     return x
 
 # separating coefficient matrix
-def sep_mat(a):
+def coef_mat(a):
     n = len(a)
     x, y = [], []
 
@@ -409,7 +409,7 @@ def gauss_jordan_eli(a, b):
 
             mat[j] = mat_next
 
-    x, y = sep_mat(mat)
+    x, y = coef_mat(mat)
 
     return y
 
@@ -431,7 +431,7 @@ def gauss_eli(a, b):
             mat[i][n] = mat[i][n] - mat[i][k] * mat[k][n]
         mat[i][n] /= mat[i][i]
 
-    x, y = sep_mat(mat)
+    x, y = coef_mat(mat)
 
     return y
 
