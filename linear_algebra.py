@@ -351,6 +351,18 @@ def mat_inv(a):
 
 #         return res
 
+def norm(a):
+    n = len(a)
+    res = sum(a[i] ** 2 for i in range(n)) ** 0.5
+
+    return res
+
+def normalize(a):
+    n = len(a)
+    v = [a[i] / norm(a) for i in range(n)]
+
+    return v
+
 if __name__ == "__main__":
     a = [1, 2, 3]
     b = [2, 4, 8]
@@ -424,3 +436,6 @@ if __name__ == "__main__":
     # print(f'\nj = {j}')
 
     # print(f'\ndet(A): {det_rec(j)}')
+
+    print(f'\nnorm of y: {norm(y)}')
+    print(f'\nnormalization of y: {normalize(y)}')
