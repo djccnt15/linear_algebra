@@ -351,17 +351,26 @@ def mat_inv(a):
 
 #         return res
 
+# norm of vector
 def norm(a):
     n = len(a)
     res = sum(a[i] ** 2 for i in range(n)) ** 0.5
 
     return res
 
+# normalize vector
 def normalize(a):
     n = len(a)
     v = [a[i] / norm(a) for i in range(n)]
 
     return v
+
+# projection
+def proj(a, b):
+    tmp = v_inner(a, b) / v_inner(b, b)
+    res = v_smul(tmp, b)
+
+    return res
 
 if __name__ == "__main__":
     a = [1, 2, 3]
@@ -437,5 +446,6 @@ if __name__ == "__main__":
 
     # print(f'\ndet(A): {det_rec(j)}')
 
-    print(f'\nnorm of y: {norm(y)}')
-    print(f'\nnormalization of y: {normalize(y)}')
+    print(f'\nnorm of a: {norm(a)}')
+    print(f'\nnormalization of a: {normalize(a)}')
+    print(f'\nprojection of a, b: {proj(a, b)}')
