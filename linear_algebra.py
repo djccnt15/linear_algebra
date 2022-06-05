@@ -167,6 +167,13 @@ def mat_zeros(row, col):
 
     return Z
 
+# zero vector
+def v_zeros(size):
+
+    Z = [0 for i in range(size)]
+
+    return Z
+
 # upper triangular matrix
 def mat_tri_u(a):
     n = len(a)
@@ -217,7 +224,7 @@ def householder(v):
     outer = v_outer(v, v)
     inner = v_inner(v, v)
 
-    V1 = mat_smul(1/inner, outer)
+    V1 = mat_smul(1 / inner, outer)
     V2 = mat_smul(2, V1)
 
     H = mat_sub(mat_identity(n), V2)
@@ -358,6 +365,16 @@ def norm(a):
 
     return res
 
+# cosine theta
+def cos_similarity(a, b):
+    inner = v_inner(a, b)
+    norm_a = norm(a)
+    norm_b = norm(b)
+
+    res = inner / (norm_a * norm_b)
+
+    return res
+
 # normalize vector
 def normalize(a):
     n = len(a)
@@ -369,6 +386,30 @@ def normalize(a):
 def proj(a, b):
     tmp = v_inner(a, b) / v_inner(b, b)
     res = v_smul(tmp, b)
+
+    return res
+
+# Gram-Schmidt Process
+def gram_schmidt(s):
+    n = len(s)
+    m = len(s[0])
+    res = []
+
+    for i in range(n):
+        if i == 0:
+            res.append(s[i])
+
+        else:
+            tmp_list = []
+            for j in range(i):
+                tmp = proj(s[i], res[j])
+                tmp_list.append(tmp)
+
+            tmp = v_zeros(m)
+            for k in range(len(tmp_list)):
+                tmp = v_add(tmp, tmp_list[k])
+            tmp = v_sub(s[i], tmp)
+            res.append(tmp)
 
     return res
 
@@ -416,6 +457,7 @@ if __name__ == "__main__":
 
     print(f'\nidentity matrix: {mat_identity(3)}')
     print(f'\nzero matrix: {mat_zeros(2, 3)}')
+    print(f'\nzero vector: {v_zeros(3)}')
     print(f'\nupper triangular matrix: {mat_tri_u(f)}')
     print(f'\nlower triangular matrix: {mat_tri_l(f)}')
 
@@ -447,5 +489,11 @@ if __name__ == "__main__":
     # print(f'\ndet(A): {det_rec(j)}')
 
     print(f'\nnorm of a: {norm(a)}')
+    print(f'\ncos similarity of a, b: {cos_similarity(a, b)}')
     print(f'\nnormalization of a: {normalize(a)}')
     print(f'\nprojection of a, b: {proj(a, b)}')
+
+    s = [[1, 0, 1], [0, 1, 1], [0, 0, 1]]
+    print(f'\ns = {s}')
+
+    print(f'\ngram-schmidt of s: {gram_schmidt(s)}')
