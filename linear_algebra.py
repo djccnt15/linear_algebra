@@ -1,5 +1,3 @@
-import copy
-
 # addition of vector
 def v_add(a, b):
     n = len(a)
@@ -231,13 +229,13 @@ def householder(v):
 
     return H
 
-# creating augmented matrix
-def mat_aug(a, b):
-    x = copy.deepcopy(a)
+# creating vector augmented matrix
+def mat_aug_v(a, b):
+    n = len(a)
 
-    x = [x + [b[i]] for i, x in enumerate(x)]
+    res = [a[i] + [b[i]] for i in range(n)]
 
-    return x
+    return res
 
 # separating coefficient matrix
 def mat_coef(a):
@@ -257,7 +255,7 @@ def mat_pivot(mat):
 
 # Gauss elimination
 def gauss_eli(a, b):
-    mat = mat_aug(a, b)
+    mat = mat_aug_v(a, b)
     mat = mat_pivot(mat)
     n = len(mat)
 
@@ -279,8 +277,7 @@ def gauss_eli(a, b):
     return y
 
 # Gauss-Jordan elimination
-def gauss_jordan_eli(a):
-    mat = copy.deepcopy(a)
+def gauss_jordan_eli(mat):
     n = len(mat)
 
     for i in range(n):
@@ -299,7 +296,7 @@ def gauss_jordan_eli(a):
 
 # solve equation with Gauss-Jordan elimination
 def solve(a, b):
-    mat = mat_aug(a, b)
+    mat = mat_aug_v(a, b)
     mat = mat_pivot(mat)
     mat = gauss_jordan_eli(mat)
     x, y = mat_coef(mat)
@@ -307,12 +304,12 @@ def solve(a, b):
     return y
 
 # creating matrix augmented matrix
-def mat_aug_inv(a, b):
-    x = copy.deepcopy(a)
+def mat_aug_mat(a, b):
+    n = len(a)
 
-    x = [x + b[i] for i, x in enumerate(x)]
+    res = [a[i] + b[i] for i in range(n)]
 
-    return x
+    return res
 
 # separating coefficient matrix
 def mat_coef_inv(a, b):
@@ -327,7 +324,7 @@ def mat_coef_inv(a, b):
 def mat_inv(a):
     n = len(a)
     i = mat_identity(n)
-    mat = mat_aug_inv(a, i)
+    mat = mat_aug_mat(a, i)
     mat = mat_pivot(mat)
     mat = gauss_jordan_eli(mat)
     x, res = mat_coef_inv(mat, n)
@@ -365,13 +362,13 @@ def norm(a):
 
     return res
 
-# cosine theta
+# cosine similarity
 def cos_similarity(a, b):
     inner = v_inner(a, b)
-    norm_a = norm(a)
-    norm_b = norm(b)
+    nm_a = norm(a)
+    nm_b = norm(b)
 
-    res = inner / (norm_a * norm_b)
+    res = inner / (nm_a * nm_b)
 
     return res
 
@@ -400,10 +397,7 @@ def gram_schmidt(s):
             res.append(s[i])
 
         else:
-            tmp_list = []
-            for j in range(i):
-                tmp = proj(s[i], res[j])
-                tmp_list.append(tmp)
+            tmp_list = [proj(s[i], res[j]) for j in range(i)]
 
             tmp = v_zeros(m)
             for k in range(len(tmp_list)):
@@ -412,6 +406,19 @@ def gram_schmidt(s):
             res.append(tmp)
 
     return res
+
+# QR decomposition, QR factorization with Gram-Schmidt Process
+def qr_gramschmidt(a):
+    mat = mat_transpose(a)
+    n = len(mat)
+    tmp = gram_schmidt(mat)
+
+    q_tmp = [normalize(i) for i in tmp]
+    q = mat_transpose(q_tmp)
+
+    r = [[0 if i > j else v_inner(mat[j], q_tmp[i]) for j in range(n)] for i in range(n)]
+
+    return q, r
 
 if __name__ == "__main__":
     a = [1, 2, 3]
@@ -476,10 +483,10 @@ if __name__ == "__main__":
     y = [4, 5, 3]
     print(f'\nx = {x}\ny = {y}')
 
-    print(f'\ncreating augmented matrix: {mat_aug(x, y)}')
-    print(f'\nsorting augmented matrix: {mat_pivot(mat_aug(x, y))}')
+    print(f'\ncreating augmented matrix: {mat_aug_v(x, y)}')
+    print(f'\nsorting augmented matrix: {mat_pivot(mat_aug_v(x, y))}')
     print(f'\nGauss elimination: {gauss_eli(x, y)}')
-    print(f'\nGauss Jordan elimination: {gauss_jordan_eli(mat_aug(x, y))}')
+    print(f'\nGauss Jordan elimination: {gauss_jordan_eli(mat_aug_v(x, y))}')
     print(f'\nSolve equation with Gauss-Jordan elimination: {solve(x, y)}')
     print(f'\ninverse matrix: {mat_inv(x)}')
 
@@ -493,7 +500,8 @@ if __name__ == "__main__":
     print(f'\nnormalization of a: {normalize(a)}')
     print(f'\nprojection of a, b: {proj(a, b)}')
 
-    s = [[1, 0, 1], [0, 1, 1], [0, 0, 1]]
+    s = [[1, 0, 1], [0, 1, 1], [1, 2, 0]]
     print(f'\ns = {s}')
 
     print(f'\ngram-schmidt of s: {gram_schmidt(s)}')
+    print(f'\nQR decomposition of s with Gram-Schmidt Process: {qr_gramschmidt(s)}')
