@@ -199,7 +199,7 @@ def mat_toeplitz(a, b):
 
     return T
 
-# outer product of vector
+# outer product, tensor product of vector
 def v_outer(a, b):
     n1 = len(a)
     n2 = len(b)
@@ -228,6 +228,14 @@ def householder(v):
     H = mat_sub(mat_identity(n), V2)
 
     return H
+
+# determinant of 2 by 2 matrix
+def determinant(a):
+    det = (a[0][0] * a[1][1]) - (a[0][1] * a[1][0])
+
+    return det
+
+a = [[1, 2], [3, 4]]
 
 # creating vector augmented matrix
 def mat_aug_v(a, b):
@@ -420,6 +428,94 @@ def qr_gramschmidt(a):
 
     return q, r
 
+# QR decomposition, QR factorization with householder matrix
+# sign of vector
+def v_sign(a):
+    res = 1
+    if a[0] < 0: res = -1
+
+    return res
+
+# get element of househelder matrixes except last one
+def ele_h(a):
+    at = mat_transpose(a)
+    nm = norm(at[0])
+    e = [1 if j == 0 else 0 for j in range(len(at[0]))]
+    sign = v_sign(at[0])
+    tmp = v_smul(sign * nm, e)
+    v = v_add(at[0], tmp)
+    h = householder(v)
+
+    return h
+
+# QR decomposition
+def qr_householder(a):
+    n = len(mat_transpose(a))
+    h_list_tmp = []
+
+    # get househelder matrixes
+    for i in range(n):
+        if i == 0:
+            res = ele_h(a)
+            h_list_tmp.append(res)
+            tmp_res = mat_mul(res, a)
+
+        elif i < n - 1:
+            an = [[tmp_res[j][k] for k in range(1, len(tmp_res[0]))] for j in range(1, len(tmp_res))]
+            res = ele_h(an)
+            h_list_tmp.append(res)
+            tmp_res = mat_mul(res, an)
+
+        else:
+            an = [tmp_res[j][k] for k in range(1, len(tmp_res[0])) for j in range(1, len(tmp_res))]
+            nm = norm(an)
+            e = [1 if j == 0 else 0 for j in range(len(an))]
+            sign = v_sign(an)
+            tmp = v_smul(sign * nm, e)
+            v = v_add(an, tmp)
+            h = householder(v)
+            h_list_tmp.append(h)
+
+    # convert househelder matrixes to H_{i} form
+    m = len(a)
+    I = mat_identity(m)
+    h_list = [h_tmp if len(h_tmp) == m \
+        else [[I[i][j] if i < m - len(h_tmp) or j < m - len(h_tmp) \
+            else h_tmp[i - (m - len(h_tmp))][j - (m - len(h_tmp))] \
+                for i in range(m)] for j in range(m)] for h_tmp in h_list_tmp]
+
+    # h_list = []
+    # for h_tmp in h_list_tmp:
+    #     p = len(h_tmp)
+
+    #     if p == m:
+    #         tmp = h_tmp
+    #     else:
+    #         tmp = []
+    #         for i in range(m):
+    #             row = []
+    #             for j in range(m):
+    #                 if i < m - p or j < m - p:
+    #                     row.append(I[i][j])
+    #                 else:
+    #                     row.append(h_tmp[i - (m - p)][j - (m - p)])
+    #             tmp.append(row)
+    #     h_list.append(tmp)
+
+    # calculate Q
+    q = mat_identity(len(h_list[0]))
+    for i in h_list:
+        q = mat_mul(q, i)
+
+    # calculate R
+    tmp = list(reversed(h_list))
+    tmp_i = mat_identity(len(h_list[0]))
+    for i in tmp:
+        tmp_i = mat_mul(tmp_i, i)
+    r = mat_mul(tmp_i, a)
+
+    return q, r
+
 if __name__ == "__main__":
     a = [1, 2, 3]
     b = [2, 4, 8]
@@ -500,8 +596,9 @@ if __name__ == "__main__":
     print(f'\nnormalization of a: {normalize(a)}')
     print(f'\nprojection of a, b: {proj(a, b)}')
 
-    s = [[1, 0, 1], [0, 1, 1], [1, 2, 0]]
+    s = [[10, -10, 4, 10], [20, 4, -20, 8], [30, 40, 2, 6], [10, -10, 0, 3]]
     print(f'\ns = {s}')
 
     print(f'\ngram-schmidt of s: {gram_schmidt(s)}')
     print(f'\nQR decomposition of s with Gram-Schmidt Process: {qr_gramschmidt(s)}')
+    print(f'\nQR decomposition of s with householder: {qr_householder(s)}')
