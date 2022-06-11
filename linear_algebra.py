@@ -2,67 +2,67 @@ from functools import reduce
 
 # addition of vector
 def v_add(*a):
-    res = [sum(i) for i in zip(*a)]
+    res = [sum(v) for v in zip(*a)]
 
     return res
 
 # subtraction of vector
 def v_sub(a, b):
-    res = [i - j for i, j in zip(a, b)]
+    res = [v - u for v, u in zip(a, b)]
 
     return res
 
 # scalar multiplication of vector
 def v_smul(s, a):
-    res = [s * i for i in a]
+    res = [s * v for v in a]
 
     return res
 
 # hadamard product of vector
 def v_hmul(*a):
-    res = [reduce(lambda x, y: x * y, i) for i in zip(*a)]
+    res = [reduce(lambda n, m: n * m, v) for v in zip(*a)]
 
     return res
 
 # hadamard division of vector
 def v_hdiv(a, b):
-    res = [i / j for i, j in zip(a, b)]
+    res = [v / u for v, u in zip(a, b)]
 
     return res
 
 # addition of matrix
 def mat_add(*a):
-    res = [[sum(j) for j in zip(*i)] for i in zip(*a)]
+    res = [[sum(v) for v in zip(*i)] for i in zip(*a)]
 
     return res
 
 # subtraction of matrix
 def mat_sub(a, b):
-    res = [[j - k for j, k in zip(*i)] for i in zip(a, b)]
+    res = [[v - u for v, u in zip(*i)] for i in zip(a, b)]
 
     return res
 
 # scalar multiplication of matrix
 def mat_smul(s, a):
-    res = [[s * j for j in i] for i in a]
+    res = [[s * v for v in r] for r in a]
 
     return res
 
 # hadamard product of matrix
 def mat_hmul(*a):
-    res = [[reduce(lambda x, y: x * y, j) for j in zip(*i)] for i in zip(*a)]
+    res = [[reduce(lambda n, m: n * m, v) for v in zip(*i)] for i in zip(*a)]
 
     return res
 
 # hadamard division of matrix
 def mat_hdiv(a, b):
-    res = [[j / k for j, k in zip(*i)] for i in zip(a, b)]
+    res = [[v / u for v, u in zip(*i)] for i in zip(a, b)]
 
     return res
 
 # multiplication of matrix
 def mat_mul(a, b):
-    res = [[sum(a * b for a, b in zip(row_a, col_b)) for col_b in zip(*b)] for row_a in a]
+    res = [[sum(v * u for v, u in zip(r, c)) for c in zip(*b)] for r in a]
 
     return res
 
@@ -73,91 +73,91 @@ def mat_mul_all(*a):
 
 # trace of matrix
 def mat_tr(a):
-    res = sum(i[n] for n, i in enumerate([*a]))
+    res = sum(v[i] for i, v in enumerate([*a]))
 
     return res
 
 # transposed matrix
-def mat_transpose(a):
-    At = [[e for e in i] for i in zip(*a)]
+def mat_trans(a):
+    At = [list(r) for r in zip(*a)]
 
     return At
 
 # symmetric matrix check
 def symmetric_check(a):
-    At = mat_transpose(a)
+    At = mat_trans(a)
 
     return a == At
 
 # elements of diagonal matrix
 def diag_ele(a):
-    d = [i[n] for n, i in enumerate([*a])]
+    d = [v[i] for i, v in enumerate([*a])]
 
     return d
 
 # diagonal matrix
 def mat_diag(a):
-    D = [[j if n == m else 0 for m, j in enumerate(i)] for n, i in enumerate(a)]
+    D = [[v if i == j else 0 for j, v in enumerate(r)] for i, r in enumerate(a)]
 
     return D
 
 # upper bidiagonal matrix
 def mat_bidiag_u(a):
-    res = [[0 if n > m or m - n > 1 else j for m, j in enumerate(i)] for n, i in enumerate(a)]
+    res = [[0 if i > j or j - i > 1 else v for j, v in enumerate(r)] for i, r in enumerate(a)]
 
     return res
 
 # lower bidiagonal matrix
 def mat_bidiag_l(a):
-    res = [[0 if n < m or n - m > 1 else j for m, j in enumerate(i)] for n, i in enumerate(a)]
+    res = [[0 if i < j or i - j > 1 else v for j, v in enumerate(r)] for i, r in enumerate(a)]
 
     return res
 
 # identity matrix
-def mat_identity(size):
-    I = [[1 if i == j else 0 for j in range(size)] for i in range(size)]
+def mat_identity(n):
+    I = [[1 if i == j else 0 for j in range(n)] for i in range(n)]
 
     return I
 
 # zero matrix
-def mat_zeros(row, col):
-    Z = [[0 for j in range(col)] for i in range(row)]
+def mat_zeros(r, c):
+    Z = [[0 for j in range(c)] for i in range(r)]
 
     return Z
 
 # zero vector
-def v_zeros(size):
-    Z = [0 for i in range(size)]
+def v_zeros(n):
+    Z = [0 for i in range(n)]
 
     return Z
 
 # upper triangular matrix
 def mat_tri_u(a):
-    res = [[0 if n > m else j for m, j in enumerate(i)] for n, i in enumerate(a)]
+    res = [[0 if i > j else v for j, v in enumerate(r)] for i, r in enumerate(a)]
 
     return res
 
 # lower triangular matrix
 def mat_tri_l(a):
-    res = [[0 if n < m else j for m, j in enumerate(i)] for n, i in enumerate(a)]
+    res = [[0 if i < j else v for j, v in enumerate(r)] for i, r in enumerate(a)]
 
     return res
 
 # toeplitz matrix
 def mat_toeplitz(a, b):
-    T = [[a[n - m] if n >= m else b[m - n] for m, j in enumerate(b)] for n, i in enumerate(a)]
+    T = [[a[i - j] if i >= j else b[j - i] for j, m in enumerate(b)] for i, n in enumerate(a)]
 
     return T
 
 # outer product, tensor product of vector
 def v_outer(a, b):
-    res = [[i * j for j in b] for i in a]
+    res = [[v * u for u in b] for v in a]
 
     return res
 
 # inner product of vector
 def v_inner(a, b):
-    res = sum(x * y for x, y in zip(a, b))
+    res = sum(v * u for v, u in zip(a, b))
 
     return res
 
@@ -167,10 +167,10 @@ def householder(v):
     outer = v_outer(v, v)
     inner = v_inner(v, v)
 
-    V1 = mat_smul(1 / inner, outer)
-    V2 = mat_smul(2, V1)
+    V = mat_smul(1 / inner, outer)
+    V = mat_smul(2, V)
 
-    H = mat_sub(mat_identity(n), V2)
+    H = mat_sub(mat_identity(n), V)
 
     return H
 
@@ -182,14 +182,14 @@ def determinant(a):
 
 # creating vector augmented matrix
 def mat_aug_v(a, b):
-    res = [i + [j] for i, j in zip(a, b)]
+    res = [v + [u] for v, u in zip(a, b)]
 
     return res
 
 # separating coefficient matrix
 def mat_coef(a):
-    x = [i[:-1] for i in a]
-    y = [y for i in a for y in i[-1:]]
+    x = [r[:-1] for r in a]
+    y = [v for r in a for v in r[-1:]]
 
     return x, y
 
@@ -251,14 +251,14 @@ def solve(a, b):
 
 # creating matrix augmented matrix
 def mat_aug_mat(a, b):
-    res = [i + j for i, j in zip(a, b)]
+    res = [v + u for v, u in zip(a, b)]
 
     return res
 
 # separating coefficient matrix
 def mat_coef_inv(a, b):
-    x = [i[:b] for i in a]
-    y = [[y for y in i[b:]] for i in a]
+    x = [r[:b] for r in a]
+    y = [r[b:] for r in a]
 
     return x, y
 
@@ -315,9 +315,9 @@ def cos_similarity(a, b):
 
 # normalize vector
 def normalize(a):
-    v = [i / norm(a) for i in a]
+    n = [v / norm(a) for v in a]
 
-    return v
+    return n
 
 # projection
 def proj(a, b):
@@ -328,28 +328,26 @@ def proj(a, b):
 
 # Gram-Schmidt Process
 def gram_schmidt(s):
-    n = len(s)
     res = []
 
-    for i in range(n):
+    for i, v in enumerate(s):
         if i == 0:
             res.append(s[i])
 
         else:
-            tmp_list = [proj(s[i], res[j]) for j in range(i)]
-            tmp = v_sub(s[i], v_add(*tmp_list[:len(tmp_list)]))
+            tmp = v_sub(s[i], v_add(*[proj(s[i], res[j]) for j in range(i)]))
             res.append(tmp)
 
     return res
 
 # QR decomposition, QR factorization with Gram-Schmidt Process
 def qr_gramschmidt(a):
-    mat = mat_transpose(a)
+    mat = mat_trans(a)
     n = len(mat)
     gs = gram_schmidt(mat)
 
     q_tmp = [normalize(i) for i in gs]
-    q = mat_transpose(q_tmp)
+    q = mat_trans(q_tmp)
 
     r = [[0 if i > j else v_inner(mat[j], q_tmp[i]) for j in range(n)] for i in range(n)]
 
@@ -365,7 +363,7 @@ def v_sign(a):
 
 # get element of househelder matrixes except last one
 def ele_h(a):
-    at = mat_transpose(a)
+    at = mat_trans(a)
     nm = norm(at[0])
     e = [1 if j == 0 else 0 for j in range(len(at[0]))]
     sign = v_sign(at[0])
@@ -377,7 +375,7 @@ def ele_h(a):
 
 # QR decomposition
 def qr_householder(a):
-    n = len(mat_transpose(a))
+    n = len(mat_trans(a))
     h_list_tmp = []
 
     # get househelder matrixes
@@ -469,7 +467,7 @@ if __name__ == "__main__":
     print(f'\ne = {e}')
 
     print(f'\ntrace of matrix: {mat_tr(e)}')
-    print(f'\ntransposed matrix: {mat_transpose(e)}')
+    print(f'\ntransposed matrix: {mat_trans(e)}')
 
     e_1 = [[1, 2, 3], [2, 4, 5], [3, 5, 6]]
     print(f'\ne_1 = {e_1}')

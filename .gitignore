@@ -3,6 +3,7 @@ include/
 lib/
 scripts/
 .vscode/
+__pycache__
 
 # files
 test.py
