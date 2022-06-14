@@ -441,6 +441,15 @@ def qr_householder(a):
 
     return q, r
 
+# orthogonal matrix check
+def orthogonal_check(a):
+    At = mat_trans(a)
+    tmp = mat_mul(a, At)
+    tmp = mat_smul(1 / tmp[0][0], tmp) # line for evading floating point error
+    I = mat_identity(len(a))
+
+    return tmp == I
+
 if __name__ == "__main__":
     a = [1, 2, 3]
     b = [2, 4, 8]
@@ -532,3 +541,8 @@ if __name__ == "__main__":
     print(f'\ngram-schmidt of s: {gram_schmidt(s)}')
     print(f'\nQR decomposition of s with Gram-Schmidt Process: {qr_gramschmidt(s)}')
     print(f'\nQR decomposition of s with householder: {qr_householder(s)}')
+
+    k = [[1, 1], [1, -1]]
+    print(f'\nk = {k}')
+
+    print(f'\northogonal_check: {orthogonal_check(k)}')
