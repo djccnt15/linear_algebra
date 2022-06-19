@@ -209,7 +209,7 @@ def gauss_eli(a, b):
     for i in range(n):
         for j in range(i+1, n):
             tmp = mat[j][i] / mat[i][i]
-            for k in range(n + 1):
+            for k in range(n+1):
                 mat[j][k] -= tmp * mat[i][k]
 
     # solve equation
@@ -441,6 +441,20 @@ def qr_householder(a):
 
     return q, r
 
+# eigenvalue and eigenvector by qr decomposition
+def eig_qr(a):
+    n = len(a)
+    v = mat_identity(n)
+
+    for i in range(100):
+        q, r = qr_gramschmidt(a)
+        a = mat_mul(r, q)
+        v = mat_mul(v, q)
+
+    e = diag_ele(a)
+
+    return e, v
+
 # orthogonal matrix check
 def orthogonal_check(a):
     At = mat_trans(a)
@@ -449,6 +463,47 @@ def orthogonal_check(a):
     I = mat_identity(len(a))
 
     return tmp == I
+
+# singular value decomposition
+def svd(a):
+    at = mat_trans(a)
+    ata = mat_mul(at, a)
+    e, v = eig_qr(ata)
+
+    s = [i ** 0.5 for i in e]
+
+    vt = mat_trans(v)
+
+    av = mat_mul(a, v)
+    avt = mat_trans(av)
+    ut = [normalize(v) for v in avt]
+
+    u = mat_trans(ut)
+
+    return u, s, vt
+
+# LU decomposition
+def lu_decomp(a):
+    n = len(a)
+    m = len(a[0])
+
+    l = mat_zeros(n, m)
+    u = []
+
+    for i in range(n):
+        u_tmp = a[i]
+        val = 1 / u_tmp[i]
+        l[i][i] = 1 / val
+        u_tmp = [ele * val for ele in u_tmp]
+        u.append(u_tmp)
+
+        for j in range(i+1, n):
+            r = a[j]
+            a_tmp = [ele * -r[i] for ele in u_tmp]
+            l[j][i] = r[i]
+            a[j] = [a_tmp[k] + r[k] for k in range(m)]
+
+    return l, u
 
 if __name__ == "__main__":
     a = [1, 2, 3]
@@ -542,7 +597,18 @@ if __name__ == "__main__":
     print(f'\nQR decomposition of s with Gram-Schmidt Process: {qr_gramschmidt(s)}')
     print(f'\nQR decomposition of s with householder: {qr_householder(s)}')
 
-    k = [[1, 1], [1, -1]]
+    k = [[3, 2, 1], [2, 1, 4], [1, 4, 2]]
     print(f'\nk = {k}')
 
-    print(f'\northogonal_check: {orthogonal_check(k)}')
+    print(f'\neigenvalue and eigenvector by qr decomposition: {eig_qr(k)}')
+
+    l = [[1, 1], [1, -1]]
+    print(f'\nl = {l}')
+
+    print(f'\northogonal_check: {orthogonal_check(l)}')
+
+    m = [[3, 6], [2, 3], [1, 2], [5, 5]]
+    print(f'm = {m}')
+
+    print(f'singular value decomposition: {svd(m)}')
+    print(f'lu decomposition of k: {lu_decomp(k)}')

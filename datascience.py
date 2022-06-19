@@ -16,7 +16,6 @@ def cov(a, b):
 
 # correlation pearson
 def pearson(a, b):
-
     res = cov(a, b) / ((cov(a, a) * cov(b, b)) ** 0.5)
 
     return res
