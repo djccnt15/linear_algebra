@@ -241,7 +241,7 @@ def gauss_jordan_eli(mat):
     return mat
 
 # solve equation with Gauss-Jordan elimination
-def solve(a, b):
+def solve_gauss(a, b):
     mat = mat_aug_v(a, b)
     mat = mat_pivot(mat)
     mat = gauss_jordan_eli(mat)
@@ -484,6 +484,7 @@ def svd(a):
 
 # LU decomposition
 def lu_decomp(a):
+    a = mat_pivot(a)
     n = len(a)
     m = len(a[0])
 
@@ -576,7 +577,7 @@ if __name__ == "__main__":
     print(f'\nsorting augmented matrix: {mat_pivot(mat_aug_v(x, y))}')
     print(f'\nGauss elimination: {gauss_eli(x, y)}')
     print(f'\nGauss Jordan elimination: {gauss_jordan_eli(mat_aug_v(x, y))}')
-    print(f'\nSolve equation with Gauss-Jordan elimination: {solve(x, y)}')
+    print(f'\nSolve equation with Gauss-Jordan elimination: {solve_gauss(x, y)}')
     print(f'\ncreating matrix augmented matrix: {mat_aug_mat(x, mat_identity(len(x)))}')
     print(f'\ninverse matrix: {mat_inv(x)}')
 
