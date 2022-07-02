@@ -121,7 +121,7 @@ def mat_identity(n):
 
 # zero matrix
 def mat_zeros(r, c):
-    Z = [[0 for j in range(c)] for i in range(r)]
+    Z = [[0 for _ in range(c)] for _ in range(r)]
 
     return Z
 
@@ -145,7 +145,7 @@ def mat_tri_l(a):
 
 # toeplitz matrix
 def mat_toeplitz(a, b):
-    T = [[a[i - j] if i >= j else b[j - i] for j, m in enumerate(b)] for i, n in enumerate(a)]
+    T = [[a[i - j] if i >= j else b[j - i] for j, _ in enumerate(b)] for i, _ in enumerate(a)]
 
     return T
 
@@ -330,7 +330,7 @@ def proj(a, b):
 def gram_schmidt(s):
     res = []
 
-    for i, v in enumerate(s):
+    for i, _ in enumerate(s):
         if i == 0:
             res.append(s[i])
 
