@@ -459,7 +459,7 @@ def eig_qr(a):
 def orthogonal_check(a):
     At = mat_trans(a)
     tmp = mat_mul(a, At)
-    tmp = mat_smul(1 / tmp[0][0], tmp) # line for evading floating point error
+    tmp = mat_smul(1 / tmp[0][0], tmp)  # line for evading floating point error
     I = mat_identity(len(a))
 
     return tmp == I
