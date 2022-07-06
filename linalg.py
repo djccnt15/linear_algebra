@@ -164,10 +164,7 @@ def v_inner(a, b):
 # householder matrix
 def householder(v):
     n = len(v)
-    outer = v_outer(v, v)
-    inner = v_inner(v, v)
-
-    V = mat_smul(1 / inner, outer)
+    V = mat_smul(1 / v_inner(v, v), v_outer(v, v))
     V = mat_smul(2, V)
 
     H = mat_sub(mat_identity(n), V)
@@ -305,11 +302,7 @@ def norm(a):
 
 # cosine similarity
 def cos_similarity(a, b):
-    inner = v_inner(a, b)
-    nm_a = norm(a)
-    nm_b = norm(b)
-
-    res = inner / (nm_a * nm_b)
+    res = v_inner(a, b) / (norm(a) * norm(b))
 
     return res
 
