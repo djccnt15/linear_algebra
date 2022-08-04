@@ -294,9 +294,15 @@ def mat_inv(a):
 
 #         return res
 
-# norm of vector
+# euclidean norm of vector
 def norm(a):
     res = sum(i ** 2 for i in a) ** 0.5
+
+    return res
+
+# manhattan norm of vector
+def norm_manhattan(a):
+    res = sum(abs(i) for i in a)
 
     return res
 
