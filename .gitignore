@@ -2,6 +2,7 @@
 include/
 lib/
 scripts/
+share/
 .vscode/
 __pycache__
 
