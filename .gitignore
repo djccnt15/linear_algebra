@@ -1,4 +1,4 @@
-# folders
+# env
 include/
 lib/
 scripts/
@@ -9,3 +9,5 @@ __pycache__
 # files
 test.py
 scratch.py
+*.pyc
+pyvenv.cfg

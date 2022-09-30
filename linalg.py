@@ -1,203 +1,294 @@
 from functools import reduce
 
-# addition of vector
-def v_add(*a):
+def v_add(*a: list) -> list:
+    """
+    returns addition of 2 vectors
+    """
+
     res = [sum(v) for v in zip(*a)]
-
     return res
 
-# subtraction of vector
-def v_sub(a, b):
+def v_sub(a: list, b: list) -> list:
+    """
+    returns subtraction of 2 vectors
+    """
+
     res = [v - u for v, u in zip(a, b)]
-
     return res
 
-# scalar multiplication of vector
-def v_smul(s, a):
+def v_smul(s: float, a: list) -> list:
+    """
+    returns scalar multiplication of 2 vectors
+    """
+
     res = [s * v for v in a]
-
     return res
 
-# hadamard product of vector
-def v_hmul(*a):
+def v_hmul(*a: list) -> list:
+    """
+    returns hadamard product of vectors
+    input argument must be 2d matrix
+    """
+
     res = [reduce(lambda n, m: n * m, v) for v in zip(*a)]
-
     return res
 
-# hadamard division of vector
-def v_hdiv(a, b):
+def v_hdiv(a: list, b: list) -> list:
+    """
+    returns hadamard division of 2 vectors
+    input argument must be 2d matrix
+    """
+
     res = [v / u for v, u in zip(a, b)]
-
     return res
 
-# addition of matrix
-def mat_add(*a):
+def mat_add(*a: list) -> list:
+    """
+    returns addition of matrices
+    input argument must be 2d matrix
+    """
+
     res = [[sum(v) for v in zip(*i)] for i in zip(*a)]
-
     return res
 
-# subtraction of matrix
-def mat_sub(a, b):
+def mat_sub(a: list, b: list) -> list:
+    """
+    returns subtraction of matrix
+    input argument must be 2d matrix
+    """
+
     res = [[v - u for v, u in zip(*i)] for i in zip(a, b)]
-
     return res
 
-# scalar multiplication of matrix
-def mat_smul(s, a):
+def mat_smul(s: float, a: list) -> list:
+    """
+    returns scalar multiplication of matrix
+    input argument must be 2d matrix
+    """
+
     res = [[s * v for v in r] for r in a]
-
     return res
 
-# hadamard product of matrix
-def mat_hmul(*a):
+def mat_hmul(*a: list) -> list:
+    """
+    returns hadamard product of matrix
+    input argument must be 2d matrix
+    """
+
     res = [[reduce(lambda n, m: n * m, v) for v in zip(*i)] for i in zip(*a)]
-
     return res
 
-# hadamard division of matrix
-def mat_hdiv(a, b):
+def mat_hdiv(a: list, b: list) -> list:
+    """
+    returns hadamard division of matrix
+    input argument must be 2d matrix
+    """
+
     res = [[v / u for v, u in zip(*i)] for i in zip(a, b)]
-
     return res
 
-# multiplication of matrix
-def mat_mul(a, b):
+def mat_mul(a: list, b: list) -> list:
+    """
+    returns multiplication of 2 matrices
+    input argument must be 2d matrix
+    """
+
     res = [[sum(v * u for v, u in zip(r, c)) for c in zip(*b)] for r in a]
-
     return res
 
-def mat_mul_all(*a):
+def mat_mul_all(*a: list) -> list:
+    """
+    returns multiplication of 2 matrices
+    input argument must be 2d matrix
+    """
+
     res = reduce(mat_mul, [*a])
-
     return res
 
-# trace of matrix
-def mat_tr(a):
+def mat_tr(a: list) -> float:
+    """
+    returns trace of matrix
+    input argument must be 2d matrix
+    """
+
     res = sum(v[i] for i, v in enumerate([*a]))
-
     return res
 
-# transposed matrix
-def mat_trans(a):
-    At = [list(r) for r in zip(*a)]
+def mat_trans(a: list) -> list:
+    """
+    returns transposed matrix
+    input argument must be 2d matrix
+    """
 
+    At = [list(r) for r in zip(*a)]
     return At
 
-# symmetric matrix check
-def symmetric_check(a):
-    At = mat_trans(a)
+def symmetric_check(a: list) -> bool:
+    """
+    checks whether symmetric matrix or not
+    input argument must be 2d matrix
+    """
 
+    At = mat_trans(a)
     return a == At
 
-# elements of diagonal matrix
-def diag_ele(a):
-    d = [v[i] for i, v in enumerate([*a])]
+def diag_ele(a: list) -> list:
+    """
+    returns elements of diagonal matrix
+    input argument must be 2d matrix
+    """
 
+    d = [v[i] for i, v in enumerate([*a])]
     return d
 
-# diagonal matrix
-def mat_diag(a):
-    D = [[v if i == j else 0 for j, v in enumerate(r)] for i, r in enumerate(a)]
+def mat_diag(a: list) -> list:
+    """
+    returns diagonal matrix from diagonal elements
+    """
 
+    D = [[v if i == j else 0 for j, v in enumerate(r)] for i, r in enumerate(a)]
     return D
 
-# upper bidiagonal matrix
-def mat_bidiag_u(a):
+def mat_bidiag_u(a: list) -> list:
+    """
+    transform matrix into upper bidiagonal matrix
+    input argument must be 2d matrix
+    """
+
     res = [[0 if i > j or j - i > 1 else v for j, v in enumerate(r)] for i, r in enumerate(a)]
-
     return res
 
-# lower bidiagonal matrix
-def mat_bidiag_l(a):
+def mat_bidiag_l(a: list) -> list:
+    """
+    transform matrix into lower bidiagonal matrix
+    input argument must be 2d matrix
+    """
+
     res = [[0 if i < j or i - j > 1 else v for j, v in enumerate(r)] for i, r in enumerate(a)]
-
     return res
 
-# identity matrix
-def mat_identity(n):
-    I = [[1 if i == j else 0 for j in range(n)] for i in range(n)]
+def mat_identity(n: int) -> list:
+    """
+    returns n by n sized identity matrix
+    """
 
+    I = [[1 if i == j else 0 for j in range(n)] for i in range(n)]
     return I
 
-# zero matrix
-def mat_zeros(r, c):
+def mat_zeros(r: int, c: int) -> list:
+    """
+    returns r by c sized zero matrix
+    """
+
     Z = [[0 for _ in range(c)] for _ in range(r)]
-
     return Z
 
-# zero vector
-def v_zeros(n):
-    Z = [0 for i in range(n)]
+def v_zeros(n: int) -> list:
+    """
+    returns n sized zero vector
+    """
 
+    Z = [0 for _ in range(n)]
     return Z
 
-# upper triangular matrix
-def mat_tri_u(a):
+def mat_tri_u(a: list) -> list:
+    """
+    transform matrix into upper triangular matrix
+    input argument must be 2d matrix
+    """
+
     res = [[0 if i > j else v for j, v in enumerate(r)] for i, r in enumerate(a)]
-
     return res
 
-# lower triangular matrix
-def mat_tri_l(a):
+def mat_tri_l(a: list) -> list:
+    """
+    transform matrix into lower triangular matrix
+    input argument must be 2d matrix
+    """
+
     res = [[0 if i < j else v for j, v in enumerate(r)] for i, r in enumerate(a)]
-
     return res
 
-# toeplitz matrix
-def mat_toeplitz(a, b):
-    T = [[a[i - j] if i >= j else b[j - i] for j, _ in enumerate(b)] for i, _ in enumerate(a)]
+def mat_toeplitz(a: list, b: list) -> list:
+    """
+    unite 2 lists into toeplitz matrix
+    """
 
+    T = [[a[i - j] if i >= j else b[j - i] for j, _ in enumerate(b)] for i, _ in enumerate(a)]
     return T
 
-# outer product, tensor product of vector
-def v_outer(a, b):
+def v_outer(a: list, b: list) -> list:
+    """
+    returns outer product, tensor product of 2 vectors
+    """
+
     res = [[v * u for u in b] for v in a]
-
     return res
 
-# inner product of vector
-def v_inner(a, b):
+def v_inner(a: list, b: list) -> float:
+    """
+    returns inner product of 2 vectors
+    """
+
     res = sum(v * u for v, u in zip(a, b))
-
     return res
 
-# householder matrix
-def householder(v):
+def householder(v: list) -> list:
+    """
+    transform vector into householder matrix
+    """
+
     n = len(v)
     V = mat_smul(1 / v_inner(v, v), v_outer(v, v))
     V = mat_smul(2, V)
-
     H = mat_sub(mat_identity(n), V)
-
     return H
 
-# determinant of 2 by 2 matrix
-def determinant(a):
-    det = (a[0][0] * a[1][1]) - (a[0][1] * a[1][0])
+def determinant(a: list) -> float:
+    """
+    returns determinant of 2 by 2 matrix
+    input argument must be 2d matrix
+    """
 
+    det = (a[0][0] * a[1][1]) - (a[0][1] * a[1][0])
     return det
 
-# creating vector augmented matrix
-def mat_aug_v(a, b):
-    res = [v + [u] for v, u in zip(a, b)]
+def mat_aug_v(a: list, b: list) -> list:
+    """
+    transform matrix into vector augmented matrix
+    input argument must be 2d matrix
+    """
 
+    res = [v + [u] for v, u in zip(a, b)]
     return res
 
-# separating coefficient matrix
-def mat_coef(a):
+def mat_coef(a: list) -> tuple:
+    """
+    separates coefficient matrix from augmented matrix
+    input argument must be 2d matrix
+    """
+
     x = [r[:-1] for r in a]
     y = [v for r in a for v in r[-1:]]
-
     return x, y
 
-# pivoting augmented matrix
-def mat_pivot(mat):
-    mat = sorted(mat, key=lambda x: abs(x[0]), reverse=True)
+def mat_pivot(mat: list) -> list:
+    """
+    returns pivoted matrix
+    input argument must be 2d matrix
+    this is not actual "mathematical" pivoting as this function not selecting rows which first element is 1
+    this function just sorts rows as order by descending with first elements of each row
+    """
 
+    mat = sorted(mat, key=lambda x: abs(x[0]), reverse=True)
     return mat
 
-# Gauss elimination
-def gauss_eli(a, b):
+def gauss_eli(a: list, b: list) -> list:
+    """
+    solving equation with Gauss elimination
+    input argument must be 2d matrix
+    """
+
     mat = mat_aug_v(a, b)
     mat = mat_pivot(mat)
     n = len(mat)
@@ -219,8 +310,13 @@ def gauss_eli(a, b):
 
     return y
 
-# Gauss-Jordan elimination
-def gauss_jordan_eli(mat):
+def gauss_jordan_eli(mat: list) -> list:
+    """
+    Gauss-Jordan elimination
+    transform matrix into Gauss-Jordan eliminated form
+    input argument must be 2d matrix
+    """
+
     n = len(mat)
 
     for i in range(n):
@@ -237,30 +333,43 @@ def gauss_jordan_eli(mat):
 
     return mat
 
-# solve equation with Gauss-Jordan elimination
-def solve_gauss(a, b):
+def solve_gauss(a: list, b: list) -> list:
+    """
+    solving equation with Gauss-Jordan elimination
+    input argument must be 2d matrix
+    """
+
     mat = mat_aug_v(a, b)
     mat = mat_pivot(mat)
     mat = gauss_jordan_eli(mat)
     x, y = mat_coef(mat)
-
     return y
 
-# creating matrix augmented matrix
-def mat_aug_mat(a, b):
-    res = [v + u for v, u in zip(a, b)]
+def mat_aug_mat(a: list, b: list) -> list:
+    """
+    transform matrix into matrix augmented matrix
+    input argument must be 2d matrix
+    """
 
+    res = [v + u for v, u in zip(a, b)]
     return res
 
-# separating coefficient matrix
-def mat_coef_inv(a, b):
+def mat_coef_inv(a: list, b: int) -> tuple:
+    """
+    separates coefficient matrix
+    input argument must be 2d matrix
+    """
+
     x = [r[:b] for r in a]
     y = [r[b:] for r in a]
-
     return x, y
 
-# inverse matrix
-def mat_inv(a):
+def mat_inv(a: list) -> list:
+    """
+    returns inverted matrix
+    input argument must be 2d matrix
+    """
+
     n = len(a)
     i = mat_identity(n)
     mat = mat_aug_mat(a, i)
@@ -270,8 +379,11 @@ def mat_inv(a):
 
     return res
 
-# # cofactor expansion
-# def det_rec(a):
+# def det_rec(a: list) -> float:
+#     """
+#     cofactor expansion
+#     """
+
 #     n = len(a)
 #     res = 0
 
@@ -294,53 +406,68 @@ def mat_inv(a):
 
 #         return res
 
-# euclidean norm of vector
-def norm(a):
+def norm(a: list) -> float:
+    """
+    returns euclidean norm of vector
+    """
+
     res = sum(i ** 2 for i in a) ** 0.5
-
     return res
 
-# manhattan norm of vector
-def norm_manhattan(a):
+def norm_manhattan(a: list) -> float:
+    """
+    returns manhattan norm of vector
+    """
+
     res = sum(abs(i) for i in a)
-
     return res
 
-# cosine similarity
-def cos_similarity(a, b):
+def cos_similarity(a: list, b: list) -> float:
+    """
+    returns cosine similarity of 2 vectors
+    """
+
     res = v_inner(a, b) / (norm(a) * norm(b))
-
     return res
 
-# normalize vector
-def normalize(a):
-    n = [v / norm(a) for v in a]
+def normalize(a: list) -> list:
+    """
+    normalize vector
+    """
 
+    n = [v / norm(a) for v in a]
     return n
 
-# projection
-def proj(a, b):
-    tmp = v_inner(a, b) / v_inner(b, b)
-    res = v_smul(tmp, b)
+def proj(u: list, v: list) -> list:
+    """
+    project 'u' vector to 'v' vector
+    """
 
+    tmp = v_inner(u, v) / v_inner(v, v)
+    res = v_smul(tmp, v)
     return res
 
-# Gram-Schmidt Process
-def gram_schmidt(s):
-    res = []
+def gram_schmidt(s: list) -> list:
+    """
+    perform Gram-Schmidt Process to matrix
+    input argument must be 2d matrix
+    """
 
+    res = []
     for i, _ in enumerate(s):
         if i == 0:
             res.append(s[i])
-
         else:
             tmp = v_sub(s[i], v_add(*[proj(s[i], res[j]) for j in range(i)]))
             res.append(tmp)
-
     return res
 
-# QR decomposition, QR factorization with Gram-Schmidt Process
-def qr_gramschmidt(a):
+def qr_gramschmidt(a: list) -> tuple:
+    """
+    QR decomposition/factorization with Gram-Schmidt Process
+    input argument must be 2d matrix
+    """
+
     mat = mat_trans(a)
     n = len(mat)
     gs = gram_schmidt(mat)
@@ -352,16 +479,23 @@ def qr_gramschmidt(a):
 
     return q, r
 
-# QR decomposition, QR factorization with householder matrix
-# sign of vector
-def v_sign(a):
+# QR decomposition/factorization with householder matrix
+def v_sign(a: list) -> int:
+    """
+    get sign of vector
+    returns sign of first element of vector
+    """
+
     res = 1
     if a[0] < 0: res = -1
-
     return res
 
-# get element of househelder matrixes except last one
-def ele_h(a):
+def ele_h(a: list) -> list:
+    """
+    get element of householder matrix except last one
+    input argument must be 2d matrix
+    """
+
     at = mat_trans(a)
     nm = norm(at[0])
     e = [1 if j == 0 else 0 for j in range(len(at[0]))]
@@ -369,13 +503,17 @@ def ele_h(a):
     tmp = v_smul(sign * nm, e)
     v = v_add(at[0], tmp)
     h = householder(v)
-
     return h
 
-# QR decomposition
-def qr_householder(a):
+def qr_householder(a: list) -> tuple:
+    """
+    QR decomposition/factorization with householder matrix
+    input argument must be 2d matrix
+    """
+
     n = len(mat_trans(a))
     h_list_tmp = []
+    tmp_res = []  # this line is only for evading unbound error, not essential
 
     # get househelder matrixes
     for i in range(n):
@@ -408,23 +546,27 @@ def qr_householder(a):
             else h_tmp[i - (m - len(h_tmp))][j - (m - len(h_tmp))] \
                 for i in range(m)] for j in range(m)] for h_tmp in h_list_tmp]
 
-    # h_list = []
-    # for h_tmp in h_list_tmp:
-    #     p = len(h_tmp)
+    '''
+    interpretation list comprehension of h_list is below
 
-    #     if p == m:
-    #         tmp = h_tmp
-    #     else:
-    #         tmp = []
-    #         for i in range(m):
-    #             row = []
-    #             for j in range(m):
-    #                 if i < m - p or j < m - p:
-    #                     row.append(I[i][j])
-    #                 else:
-    #                     row.append(h_tmp[i - (m - p)][j - (m - p)])
-    #             tmp.append(row)
-    #     h_list.append(tmp)
+    h_list = []
+    for h_tmp in h_list_tmp:
+        p = len(h_tmp)
+
+        if p == m:
+            tmp = h_tmp
+        else:
+            tmp = []
+            for i in range(m):
+                row = []
+                for j in range(m):
+                    if i < m - p or j < m - p:
+                        row.append(I[i][j])
+                    else:
+                        row.append(h_tmp[i - (m - p)][j - (m - p)])
+                tmp.append(row)
+        h_list.append(tmp)
+    '''
 
     # calculate Q
     q = mat_identity(len(h_list[0]))
@@ -440,8 +582,12 @@ def qr_householder(a):
 
     return q, r
 
-# eigenvalue and eigenvector by qr decomposition
-def eig_qr(a):
+def eig_qr(a: list) -> tuple:
+    """
+    returns eigenvalue and eigenvector by qr decomposition
+    input argument must be 2d matrix
+    """
+
     n = len(a)
     v = mat_identity(n)
 
@@ -454,8 +600,12 @@ def eig_qr(a):
 
     return e, v
 
-# orthogonal matrix check
-def orthogonal_check(a):
+def orthogonal_check(a: list) -> bool:
+    """
+    checks whether orthogonal matrix or not
+    input argument must be 2d matrix
+    """
+
     At = mat_trans(a)
     tmp = mat_mul(a, At)
     tmp = mat_smul(1 / tmp[0][0], tmp)  # line for evading floating point error
@@ -463,8 +613,12 @@ def orthogonal_check(a):
 
     return tmp == I
 
-# singular value decomposition
-def svd(a):
+def svd(a: list) -> tuple:
+    """
+    singular value decomposition
+    input argument must be 2d matrix
+    """
+
     at = mat_trans(a)
     ata = mat_mul(at, a)
     e, v = eig_qr(ata)
@@ -481,8 +635,12 @@ def svd(a):
 
     return u, s, vt
 
-# LU decomposition
-def lu_decomp(a):
+def lu_decomp(a: list) -> tuple:
+    """
+    LU decomposition
+    input argument must be 2d matrix
+    """
+
     a = mat_pivot(a)
     n = len(a)
     m = len(a[0])
