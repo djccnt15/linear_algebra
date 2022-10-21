@@ -1,5 +1,6 @@
 from functools import reduce
 
+
 def v_add(*a: list) -> list:
     """
     returns addition of 2 vectors
@@ -7,6 +8,7 @@ def v_add(*a: list) -> list:
 
     res = [sum(v) for v in zip(*a)]
     return res
+
 
 def v_sub(a: list, b: list) -> list:
     """
@@ -16,6 +18,7 @@ def v_sub(a: list, b: list) -> list:
     res = [v - u for v, u in zip(a, b)]
     return res
 
+
 def v_smul(s: float, a: list) -> list:
     """
     returns scalar multiplication of 2 vectors
@@ -23,6 +26,7 @@ def v_smul(s: float, a: list) -> list:
 
     res = [s * v for v in a]
     return res
+
 
 def v_hmul(*a: list) -> list:
     """
@@ -33,6 +37,7 @@ def v_hmul(*a: list) -> list:
     res = [reduce(lambda n, m: n * m, v) for v in zip(*a)]
     return res
 
+
 def v_hdiv(a: list, b: list) -> list:
     """
     returns hadamard division of 2 vectors
@@ -41,6 +46,7 @@ def v_hdiv(a: list, b: list) -> list:
 
     res = [v / u for v, u in zip(a, b)]
     return res
+
 
 def mat_add(*a: list) -> list:
     """
@@ -51,6 +57,7 @@ def mat_add(*a: list) -> list:
     res = [[sum(v) for v in zip(*i)] for i in zip(*a)]
     return res
 
+
 def mat_sub(a: list, b: list) -> list:
     """
     returns subtraction of matrix
@@ -59,6 +66,7 @@ def mat_sub(a: list, b: list) -> list:
 
     res = [[v - u for v, u in zip(*i)] for i in zip(a, b)]
     return res
+
 
 def mat_smul(s: float, a: list) -> list:
     """
@@ -69,6 +77,7 @@ def mat_smul(s: float, a: list) -> list:
     res = [[s * v for v in r] for r in a]
     return res
 
+
 def mat_hmul(*a: list) -> list:
     """
     returns hadamard product of matrix
@@ -77,6 +86,7 @@ def mat_hmul(*a: list) -> list:
 
     res = [[reduce(lambda n, m: n * m, v) for v in zip(*i)] for i in zip(*a)]
     return res
+
 
 def mat_hdiv(a: list, b: list) -> list:
     """
@@ -87,6 +97,7 @@ def mat_hdiv(a: list, b: list) -> list:
     res = [[v / u for v, u in zip(*i)] for i in zip(a, b)]
     return res
 
+
 def mat_mul(a: list, b: list) -> list:
     """
     returns multiplication of 2 matrices
@@ -96,6 +107,7 @@ def mat_mul(a: list, b: list) -> list:
     res = [[sum(v * u for v, u in zip(r, c)) for c in zip(*b)] for r in a]
     return res
 
+
 def mat_mul_all(*a: list) -> list:
     """
     returns multiplication of 2 matrices
@@ -104,6 +116,7 @@ def mat_mul_all(*a: list) -> list:
 
     res = reduce(mat_mul, [*a])
     return res
+
 
 def mat_tr(a: list) -> float:
     """
@@ -123,6 +136,7 @@ def mat_trans(a: list) -> list:
     At = [list(r) for r in zip(*a)]
     return At
 
+
 def symmetric_check(a: list) -> bool:
     """
     checks whether symmetric matrix or not
@@ -131,6 +145,7 @@ def symmetric_check(a: list) -> bool:
 
     At = mat_trans(a)
     return a == At
+
 
 def diag_ele(a: list) -> list:
     """
@@ -141,6 +156,7 @@ def diag_ele(a: list) -> list:
     d = [v[i] for i, v in enumerate([*a])]
     return d
 
+
 def mat_diag(a: list) -> list:
     """
     returns diagonal matrix from diagonal elements
@@ -148,6 +164,7 @@ def mat_diag(a: list) -> list:
 
     D = [[v if i == j else 0 for j, v in enumerate(r)] for i, r in enumerate(a)]
     return D
+
 
 def mat_bidiag_u(a: list) -> list:
     """
@@ -158,6 +175,7 @@ def mat_bidiag_u(a: list) -> list:
     res = [[0 if i > j or j - i > 1 else v for j, v in enumerate(r)] for i, r in enumerate(a)]
     return res
 
+
 def mat_bidiag_l(a: list) -> list:
     """
     transform matrix into lower bidiagonal matrix
@@ -167,6 +185,7 @@ def mat_bidiag_l(a: list) -> list:
     res = [[0 if i < j or i - j > 1 else v for j, v in enumerate(r)] for i, r in enumerate(a)]
     return res
 
+
 def mat_identity(n: int) -> list:
     """
     returns n by n sized identity matrix
@@ -174,6 +193,7 @@ def mat_identity(n: int) -> list:
 
     I = [[1 if i == j else 0 for j in range(n)] for i in range(n)]
     return I
+
 
 def mat_zeros(r: int, c: int) -> list:
     """
@@ -183,6 +203,7 @@ def mat_zeros(r: int, c: int) -> list:
     Z = [[0 for _ in range(c)] for _ in range(r)]
     return Z
 
+
 def v_zeros(n: int) -> list:
     """
     returns n sized zero vector
@@ -190,6 +211,7 @@ def v_zeros(n: int) -> list:
 
     Z = [0 for _ in range(n)]
     return Z
+
 
 def mat_tri_u(a: list) -> list:
     """
@@ -200,6 +222,7 @@ def mat_tri_u(a: list) -> list:
     res = [[0 if i > j else v for j, v in enumerate(r)] for i, r in enumerate(a)]
     return res
 
+
 def mat_tri_l(a: list) -> list:
     """
     transform matrix into lower triangular matrix
@@ -209,6 +232,7 @@ def mat_tri_l(a: list) -> list:
     res = [[0 if i < j else v for j, v in enumerate(r)] for i, r in enumerate(a)]
     return res
 
+
 def mat_toeplitz(a: list, b: list) -> list:
     """
     unite 2 lists into toeplitz matrix
@@ -216,6 +240,7 @@ def mat_toeplitz(a: list, b: list) -> list:
 
     T = [[a[i - j] if i >= j else b[j - i] for j, _ in enumerate(b)] for i, _ in enumerate(a)]
     return T
+
 
 def v_outer(a: list, b: list) -> list:
     """
@@ -225,6 +250,7 @@ def v_outer(a: list, b: list) -> list:
     res = [[v * u for u in b] for v in a]
     return res
 
+
 def v_inner(a: list, b: list) -> float:
     """
     returns inner product of 2 vectors
@@ -232,6 +258,7 @@ def v_inner(a: list, b: list) -> float:
 
     res = sum(v * u for v, u in zip(a, b))
     return res
+
 
 def householder(v: list) -> list:
     """
@@ -244,6 +271,7 @@ def householder(v: list) -> list:
     H = mat_sub(mat_identity(n), V)
     return H
 
+
 def determinant(a: list) -> float:
     """
     returns determinant of 2 by 2 matrix
@@ -253,6 +281,7 @@ def determinant(a: list) -> float:
     det = (a[0][0] * a[1][1]) - (a[0][1] * a[1][0])
     return det
 
+
 def mat_aug_v(a: list, b: list) -> list:
     """
     transform matrix into vector augmented matrix
@@ -261,6 +290,7 @@ def mat_aug_v(a: list, b: list) -> list:
 
     res = [v + [u] for v, u in zip(a, b)]
     return res
+
 
 def mat_coef(a: list) -> tuple:
     """
@@ -272,6 +302,7 @@ def mat_coef(a: list) -> tuple:
     y = [v for r in a for v in r[-1:]]
     return x, y
 
+
 def mat_pivot(mat: list) -> list:
     """
     returns pivoted matrix
@@ -282,6 +313,7 @@ def mat_pivot(mat: list) -> list:
 
     mat = sorted(mat, key=lambda x: abs(x[0]), reverse=True)
     return mat
+
 
 def gauss_eli(a: list, b: list) -> list:
     """
@@ -310,6 +342,7 @@ def gauss_eli(a: list, b: list) -> list:
 
     return y
 
+
 def gauss_jordan_eli(mat: list) -> list:
     """
     Gauss-Jordan elimination
@@ -333,6 +366,7 @@ def gauss_jordan_eli(mat: list) -> list:
 
     return mat
 
+
 def solve_gauss(a: list, b: list) -> list:
     """
     solving equation with Gauss-Jordan elimination
@@ -345,6 +379,7 @@ def solve_gauss(a: list, b: list) -> list:
     x, y = mat_coef(mat)
     return y
 
+
 def mat_aug_mat(a: list, b: list) -> list:
     """
     transform matrix into matrix augmented matrix
@@ -353,6 +388,7 @@ def mat_aug_mat(a: list, b: list) -> list:
 
     res = [v + u for v, u in zip(a, b)]
     return res
+
 
 def mat_coef_inv(a: list, b: int) -> tuple:
     """
@@ -363,6 +399,7 @@ def mat_coef_inv(a: list, b: int) -> tuple:
     x = [r[:b] for r in a]
     y = [r[b:] for r in a]
     return x, y
+
 
 def mat_inv(a: list) -> list:
     """
@@ -378,6 +415,7 @@ def mat_inv(a: list) -> list:
     x, res = mat_coef_inv(mat, n)
 
     return res
+
 
 # def det_rec(a: list) -> float:
 #     """
@@ -406,6 +444,7 @@ def mat_inv(a: list) -> list:
 
 #         return res
 
+
 def norm(a: list) -> float:
     """
     returns euclidean norm of vector
@@ -413,6 +452,7 @@ def norm(a: list) -> float:
 
     res = sum(i ** 2 for i in a) ** 0.5
     return res
+
 
 def norm_manhattan(a: list) -> float:
     """
@@ -422,6 +462,7 @@ def norm_manhattan(a: list) -> float:
     res = sum(abs(i) for i in a)
     return res
 
+
 def cos_similarity(a: list, b: list) -> float:
     """
     returns cosine similarity of 2 vectors
@@ -429,6 +470,7 @@ def cos_similarity(a: list, b: list) -> float:
 
     res = v_inner(a, b) / (norm(a) * norm(b))
     return res
+
 
 def normalize(a: list) -> list:
     """
@@ -438,6 +480,7 @@ def normalize(a: list) -> list:
     n = [v / norm(a) for v in a]
     return n
 
+
 def proj(u: list, v: list) -> list:
     """
     project 'u' vector to 'v' vector
@@ -446,6 +489,7 @@ def proj(u: list, v: list) -> list:
     tmp = v_inner(u, v) / v_inner(v, v)
     res = v_smul(tmp, v)
     return res
+
 
 def gram_schmidt(s: list) -> list:
     """
@@ -461,6 +505,7 @@ def gram_schmidt(s: list) -> list:
             tmp = v_sub(s[i], v_add(*[proj(s[i], res[j]) for j in range(i)]))
             res.append(tmp)
     return res
+
 
 def qr_gramschmidt(a: list) -> tuple:
     """
@@ -479,6 +524,7 @@ def qr_gramschmidt(a: list) -> tuple:
 
     return q, r
 
+
 # QR decomposition/factorization with householder matrix
 def v_sign(a: list) -> int:
     """
@@ -489,6 +535,7 @@ def v_sign(a: list) -> int:
     res = 1
     if a[0] < 0: res = -1
     return res
+
 
 def ele_h(a: list) -> list:
     """
@@ -504,6 +551,7 @@ def ele_h(a: list) -> list:
     v = v_add(at[0], tmp)
     h = householder(v)
     return h
+
 
 def qr_householder(a: list) -> tuple:
     """
@@ -582,6 +630,7 @@ def qr_householder(a: list) -> tuple:
 
     return q, r
 
+
 def eig_qr(a: list) -> tuple:
     """
     returns eigenvalue and eigenvector by qr decomposition
@@ -600,6 +649,7 @@ def eig_qr(a: list) -> tuple:
 
     return e, v
 
+
 def orthogonal_check(a: list) -> bool:
     """
     checks whether orthogonal matrix or not
@@ -612,6 +662,7 @@ def orthogonal_check(a: list) -> bool:
     I = mat_identity(len(a))
 
     return tmp == I
+
 
 def svd(a: list) -> tuple:
     """
@@ -634,6 +685,7 @@ def svd(a: list) -> tuple:
     u = mat_trans(ut)
 
     return u, s, vt
+
 
 def lu_decomp(a: list) -> tuple:
     """
@@ -662,6 +714,7 @@ def lu_decomp(a: list) -> tuple:
             a[j] = [a_tmp[k] + r[k] for k in range(m)]
 
     return l, u
+
 
 if __name__ == "__main__":
     a = [1, 2, 3]
