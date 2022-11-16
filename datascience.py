@@ -44,8 +44,8 @@ def lineFit(x: list, y: list) -> tuple:
 if __name__ == "__main__":
     a = [2.23, 4.78, 7.21, 9.37, 11.64, 14.23, 16.55, 18.70, 21.05, 23.21]
     b = [139, 123, 115, 96, 62, 54, 10, -3, -13, -55]
-    print(f'a: {a}')
-    print(f'b: {b}')
+    print(f'{a=}')
+    print(f'{b=}')
 
     print(f'\ncov of a, b: {cov(a, b)}')
     print(f'\ncorrelation pearson: {pearson(a, b)}')
