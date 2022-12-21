@@ -1,3 +1,3 @@
-# Mathemetics
+# Mathematics
 
-Implementing maths with Python
+Implementing Mathematical functions with Python

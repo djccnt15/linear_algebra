@@ -7,7 +7,6 @@ share/
 __pycache__
 
 # files
-test.py
-scratch.py
+note.py
 *.pyc
 pyvenv.cfg
