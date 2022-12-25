@@ -235,6 +235,42 @@ def corrcoef(a: list, b: list) -> float:
     return res
 
 
+def factorial_for(n: int) -> int:
+    """returns factorial of number with for loop"""
+
+    res = 1
+    for i in range(1, n+1):
+        res *= i
+    return res
+
+
+def factorial_rec(n: int) -> int:
+    """returns factorial of number with recursion"""
+
+    return 1 if n == 1 else n * factorial_rec(n - 1)
+
+
+def permutation(n: int, k: int) -> float:
+    """returns permutation of N things taken k at a time"""
+
+    res = factorial_rec(n) / factorial_rec(n - k)
+    return res
+
+
+def combination(n: int, k: int) -> float:
+    """returns combinations of N things taken k at a time"""
+
+    res = factorial_rec(n) / (factorial_rec(n - k) * factorial_rec(k))
+    return res
+
+
+def multiset(n: int, k: int) -> float:
+    """return multiset of N things taken k at a time"""
+
+    res = combination(n + k - 1, k)
+    return res
+
+
 def lineFit(x: list, y: list) -> tuple:
     """returns linear regression coefficient(weight) and intercept of two random variables"""
 
@@ -264,7 +300,8 @@ if __name__ == "__main__":
     print(f'\n{c=}\n{d=}\n')
 
     print(f'weighted mean of c as data, d as weight: {mean_weight(c, d)}')
-    print(f'prod of c: {prod_rec(c)}')
+    print(f'product of c: {prod_for(c)}')
+    print(f'product of c: {prod_rec(c)}')
     print(f'geometric mean of c: {mean_geom(c)}')
     print(f'harmonic mean of c: {mean_harm(c)}')
     print(f'trimmed mean of c, k=1: {mean_trimmed(c, 1)}')
@@ -298,5 +335,11 @@ if __name__ == "__main__":
     print(f'cov of a, b: {cov(f, g)}')
     print(f'correlation pearson: {pearson(f, g)}')
     print(f'correlation pearson: {corrcoef(f, g)}')
+
+    print(f'factorial of 10: {factorial_for(10)}')
+    print(f'factorial of 10: {factorial_rec(10)}')
+    print(f'permutation of 10 things taken 7: {permutation(10, 7)}')
+    print(f'combination of 10 things taken 7: {combination(10, 7)}')
+    print(f'multiset of 10 things taken 7: {multiset(10, 7)}')
 
     print(f'linear regression of a, b: {lineFit(f, g)}')
