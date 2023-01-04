@@ -351,6 +351,9 @@ def norm(a: vector) -> scalar:
     return res
 
 
+norm_euclidean = norm
+
+
 def norm_manhattan(a: vector) -> scalar:
     """returns manhattan norm of vector"""
 
