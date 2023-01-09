@@ -10,3 +10,4 @@ __pycache__
 note.py
 *.pyc
 pyvenv.cfg
+etc/

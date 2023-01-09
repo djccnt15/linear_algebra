@@ -45,7 +45,7 @@ def mean_weight(data: numeric, weights: numeric) -> float:
     return res
 
 
-def prod_for(data: numeric) -> float:
+def production(data: numeric) -> float:
     """product all elements in data with for loop"""
 
     res = 1
@@ -54,16 +54,16 @@ def prod_for(data: numeric) -> float:
     return res
 
 
-def prod_rec(data: numeric) -> float:
+def production_rec(data: numeric) -> float:
     """product all elements in data with recursion"""
 
-    return data[0] if len(data) == 1 else data[0] * prod_rec(data[1:])
+    return data[0] if len(data) == 1 else data[0] * production_rec(data[1:])
 
 
 def mean_geom(data: numeric) -> float:
     """returns geometric mean of data"""
 
-    res = prod_rec(data) ** (1 / len(data))
+    res = production(data) ** (1 / len(data))
     return res
 
 
@@ -238,7 +238,7 @@ def corrcoef(a: numeric, b: numeric) -> float:
     return res
 
 
-def factorial_for(n: int) -> int:
+def factorial(n: int) -> int:
     """returns factorial of number with for loop"""
 
     res = 1
@@ -256,14 +256,14 @@ def factorial_rec(n: int) -> int:
 def permutation(n: int, k: int) -> float:
     """returns permutation of N things taken k at a time"""
 
-    res = factorial_rec(n) / factorial_rec(n - k)
+    res = factorial(n) / factorial(n - k)
     return res
 
 
 def combination(n: int, k: int) -> float:
     """returns combinations of N things taken k at a time"""
 
-    res = factorial_rec(n) / (factorial_rec(n - k) * factorial_rec(k))
+    res = factorial(n) / (factorial(n - k) * factorial(k))
     return res
 
 
@@ -271,6 +271,67 @@ def multiset(n: int, k: int) -> float:
     """return multiset of N things taken k at a time"""
 
     res = combination(n + k - 1, k)
+    return res
+
+
+def bernoulli_d(x: int, p: float, n: int = 1) -> float:
+    """
+    returns probability of bernoulli distribution
+    x: case
+    p: probability
+    """
+
+    res = (p ** x) * ((1 - p) ** (n - x))
+    return res
+
+
+def binom_d(x: int, n: int, p: float) -> float:
+    """
+    returns probability of binom distribution
+    x: case
+    n: number of trial
+    p: probability
+    """
+
+    res = combination(n, x) * bernoulli_d(x=x, n=n, p=p)
+    return res
+
+
+def binom_c(x: int, n: int, p: float) -> float:
+    """
+    returns cumulative probability of binom distribution
+    x: case
+    n: number of trial
+    p: probability
+    """
+
+    res = sum(binom_d(i, n, p) for i in range(x + 1))
+    return res
+
+
+def hyper_d(x: int, M: int, n: int, N: int) -> float:
+    """
+    returns probability of hypergeometric distribution
+    x: case
+    M: size of subpopulation
+    n: size of sample
+    N: size of population
+    """
+
+    res = combination(M, x) * combination(N - M, n - x) / combination(N, n)
+    return res
+
+
+def hyper_c(x: int, M: int, n: int, N: int) -> float:
+    """
+    returns cumulative probability of hypergeometric distribution
+    x: case
+    M: size of subpopulation
+    n: size of sample
+    N: size of population
+    """
+
+    res = sum(combination(M, x) * combination(N - M, n - x) / combination(N, n) for x in range(x + 1))
     return res
 
 
@@ -303,8 +364,8 @@ if __name__ == "__main__":
     print(f'\n{c=}\n{d=}\n')
 
     print(f'weighted mean of c as data, d as weight: {mean_weight(c, d)}')
-    print(f'product of c: {prod_for(c)}')
-    print(f'product of c: {prod_rec(c)}')
+    print(f'product of c: {production(c)}')
+    print(f'product of c: {production_rec(c)}')
     print(f'geometric mean of c: {mean_geom(c)}')
     print(f'harmonic mean of c: {mean_harm(c)}')
     print(f'trimmed mean of c, k=1: {mean_trimmed(c, 1)}')
@@ -339,10 +400,16 @@ if __name__ == "__main__":
     print(f'correlation pearson: {pearson(f, g)}')
     print(f'correlation pearson: {corrcoef(f, g)}')
 
-    print(f'factorial of 10: {factorial_for(10)}')
+    print(f'factorial of 10: {factorial(10)}')
     print(f'factorial of 10: {factorial_rec(10)}')
     print(f'permutation of 10 things taken 7: {permutation(10, 7)}')
     print(f'combination of 10 things taken 7: {combination(10, 7)}')
     print(f'multiset of 10 things taken 7: {multiset(10, 7)}')
+
+    print(f'probability of bernoulli distribution: {[bernoulli_d(i, 1/3) for i in range(4)]}')
+    print(f'probability of binom distribution: {binom_d(8, 15, 0.5)}')
+    print(f'cumulative probability of binom distribution: {binom_c(8, 15, 0.5)}')
+    print(f'probability of hypergeometric distribution: {hyper_d(x=1, M=4, n=3, N=10)}')
+    print(f'cumulative probability of hypergeometric distribution: {hyper_c(x=1, M=4, n=3, N=10)}')
 
     print(f'linear regression of a, b: {lineFit(f, g)}')
