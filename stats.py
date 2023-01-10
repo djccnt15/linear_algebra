@@ -1,3 +1,5 @@
+import math
+
 numeric = list[int | float]
 
 
@@ -335,6 +337,28 @@ def hyper_c(x: int, M: int, n: int, N: int) -> float:
     return res
 
 
+def pois_d(x: int, l: float) -> float:
+    """
+    returns probability of poisson distribution
+    x: case
+    l: lambda, expectation of random variable
+    """
+
+    res = (math.e ** -l) * (l ** x) / factorial(x)
+    return res
+
+
+def pois_c(x: int, l: float) -> float:
+    """
+    returns cumulative probability of poisson distribution
+    x: case
+    l: lambda, expectation of random variable
+    """
+
+    res = sum(pois_d(i, l) for i in range(x + 1))
+    return res
+
+
 def lineFit(x: numeric, y: numeric) -> tuple:
     """returns linear regression coefficient(weight) and intercept of two random variables"""
 
@@ -411,5 +435,7 @@ if __name__ == "__main__":
     print(f'cumulative probability of binom distribution: {binom_c(8, 15, 0.5)}')
     print(f'probability of hypergeometric distribution: {hyper_d(x=1, M=4, n=3, N=10)}')
     print(f'cumulative probability of hypergeometric distribution: {hyper_c(x=1, M=4, n=3, N=10)}')
+    print(f'probability of poisson and binom distribution: {pois_d(x=2, l=2)}, {binom_d(x=2, n=20000, p=1/10000)}')
+    print(f'cumulative probability of poisson and binom distribution: {pois_c(x=2, l=2)}, {binom_c(x=2, n=20000, p=1/10000)}')
 
     print(f'linear regression of a, b: {lineFit(f, g)}')
