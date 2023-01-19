@@ -21,7 +21,7 @@ def freq_cum(data: numeric) -> dict:
     """returns cumulative frequency of sorted value"""
 
     data_sort = sorted(list(set(data)))
-    res = {val: sum(data.count(j) for j in data_sort[:i+1]) for i, val in enumerate(data_sort)}
+    res = {val: sum(data.count(j) for j in data_sort[:i + 1]) for i, val in enumerate(data_sort)}
     return res
 
 
@@ -244,7 +244,7 @@ def factorial(n: int) -> int:
     """returns factorial of number with for loop"""
 
     res = 1
-    for i in range(1, n+1):
+    for i in range(1, n + 1):
         res *= i
     return res
 
@@ -356,6 +356,28 @@ def pois_c(x: int, l: float) -> float:
     """
 
     res = sum(pois_d(i, l) for i in range(x + 1))
+    return res
+
+
+def geom_d(x: int, p: float) -> float:
+    """
+    returns probability of geometric distribution
+    x: number of failures
+    p: probability
+    """
+
+    res = ((1 - p) ** x) * p
+    return res
+
+
+def geom_c(x: int, p: float) -> float:
+    """
+    returns cumulative probability of geometric distribution
+    x: number of failures
+    p: probability
+    """
+
+    res = 1 - ((1 - p) ** (x + 1))
     return res
 
 

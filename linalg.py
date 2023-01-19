@@ -244,14 +244,14 @@ def gauss_eli(a: matrix, b: vector) -> vector:
 
     # gauss elimination
     for i in range(n):
-        for j in range(i+1, n):
+        for j in range(i + 1, n):
             tmp = mat[j][i] / mat[i][i]
-            for k in range(n+1):
+            for k in range(n + 1):
                 mat[j][k] -= tmp * mat[i][k]
 
     # solve equation
-    for i in range(n-1, -1, -1):
-        for k in range(i+1, n):
+    for i in range(n - 1, -1, -1):
+        for k in range(i + 1, n):
             mat[i][n] = mat[i][n] - mat[i][k] * mat[k][n]
         mat[i][n] /= mat[i][i]
 
