@@ -6,45 +6,38 @@ numeric = list[int | float]
 def freq(data: numeric) -> dict:
     """returns frequency of each value"""
 
-    res = {val: data.count(val) for val in set(data)}
-    return res
+    return {val: data.count(val) for val in set(data)}
 
 
 def freq_rel(data: numeric) -> dict:
     """returns relative frequency of each value"""
 
-    res = {val: data.count(val) / len(data) for val in set(data)}
-    return res
+    return {val: data.count(val) / len(data) for val in set(data)}
 
 
 def freq_cum(data: numeric) -> dict:
     """returns cumulative frequency of sorted value"""
 
     data_sort = sorted(list(set(data)))
-    res = {val: sum(data.count(j) for j in data_sort[:i + 1]) for i, val in enumerate(data_sort)}
-    return res
+    return {val: sum(data.count(j) for j in data_sort[:i + 1]) for i, val in enumerate(data_sort)}
 
 
 def bar(data: numeric) -> float:
     """returns expectation/sample mean"""
 
-    res = sum(data) / len(data)
-    return res
+    return sum(data) / len(data)
 
 
 def devi(data: numeric) -> dict:
     """returns deviation of each value"""
 
-    b = bar(data)
-    res = {val: val - b for val in sorted(list(set(data)))}
-    return res
+    return {val: val - bar(data) for val in sorted(list(set(data)))}
 
 
 def mean_weight(data: numeric, weights: numeric) -> float:
     """returns weighted mean"""
 
-    res = sum(v * w for v, w in zip(data, weights)) / sum(weights)
-    return res
+    return sum(v * w for v, w in zip(data, weights)) / sum(weights)
 
 
 def production(data: numeric) -> float:
@@ -65,22 +58,19 @@ def production_rec(data: numeric) -> float:
 def mean_geom(data: numeric) -> float:
     """returns geometric mean of data"""
 
-    res = production(data) ** (1 / len(data))
-    return res
+    return production(data) ** (1 / len(data))
 
 
 def mean_harm(data: numeric) -> float:
     """returns harmonic mean of data"""
 
-    res = len(data) / (sum(1 / v for v in data))
-    return res
+    return len(data) / (sum(1 / v for v in data))
 
 
 def mean_trimmed(data: numeric, k: int) -> float:
     """return trimmed mean from data, k defines number of data to trim"""
 
-    res = bar(sorted(data)[k:-k])
-    return res
+    return bar(sorted(data)[k:-k])
 
 
 def median(data: numeric) -> float:
@@ -90,11 +80,9 @@ def median(data: numeric) -> float:
     n = len(data)
     if n % 2 == 0:
         i = int(n / 2)
-        res = sum([data[i], data[i - 1]]) / 2
-        return res
+        return sum([data[i], data[i - 1]]) / 2
     else:
-        i = int((n + 1) / 2) - 1
-        return data[i]
+        return data[int((n + 1) / 2) - 1]
 
 
 def mode(data: numeric) -> list | None:
@@ -105,15 +93,13 @@ def mode(data: numeric) -> list | None:
     if cntmax == 1:
         return None
     else:
-        res = [v for v in cnt if cnt[v] == cntmax]
-        return res
+        return [v for v in cnt if cnt[v] == cntmax]
 
 
 def data_range(data: numeric) -> float:
     """returns range of data"""
 
-    res = max(data) - min(data)
-    return res
+    return max(data) - min(data)
 
 
 def quantile(data: numeric, q: float) -> float:
@@ -123,30 +109,25 @@ def quantile(data: numeric, q: float) -> float:
     k = (len(data) - 1) * q
     i = int(k)
     r = k - i
-    res = data[i] * (1 - r) + data[i + 1] * r
-    return res
+    return data[i] * (1 - r) + data[i + 1] * r
 
 
 def iqr_range(data: numeric) -> float:
     """returns IQR range from data"""
 
-    res = quantile(data, 0.75) - quantile(data, 0.25)
-    return res
+    return quantile(data, 0.75) - quantile(data, 0.25)
 
 
 def var(data: numeric, dof: int = 1) -> float:
     """returns variance of data"""
 
-    b = bar(data)
-    res = sum((d - b) ** 2 for d in data) / (len(data) - dof)
-    return res
+    return sum((d - bar(data)) ** 2 for d in data) / (len(data) - dof)
 
 
 def std(data: numeric, dof: int = 1) -> float:
     """return standard deviation of data"""
 
-    res = var(data, dof) ** (1/2)
-    return res
+    return var(data, dof) ** (1 / 2)
 
 
 def standardize(num: float, bar: float, std: float) -> float:
@@ -159,69 +140,60 @@ def scaler_standard(data: numeric, dof: int = 0) -> list:
     """returns standardized values of data"""
 
     b, s = bar(data), std(data, dof)
-    res = [standardize(d, b, s) for d in data]
-    return res
+    return [standardize(d, b, s) for d in data]
 
 
 def variation(data: numeric, dof: int = 0) -> float:
     """returns coefficient of variation"""
 
-    res = std(data, dof) / bar(data)
-    return res
+    return std(data, dof) / bar(data)
 
 
 def skew(data: numeric, dof: int = 0) -> float:
     """returns skewness of data"""
 
     b, s = bar(data), std(data, dof)
-    res = sum(standardize(d, b, s) ** 3 for d in data) / (len(data) - dof)
-    return res
+    return sum(standardize(d, b, s) ** 3 for d in data) / (len(data) - dof)
 
 
 def skew_adv(data: numeric) -> float:
     """returns fixed skewness of data"""
 
     n = len(data)
-    res = skew(data, 1) * (n / n - 2)
-    return res
+    return skew(data, 1) * (n / n - 2)
 
 
 def kurtosis(data: numeric, dof: int = 0) -> float:
     """returns kurtosis of data"""
 
     b, s = bar(data), std(data, dof)
-    res = (sum(standardize(d, b, s) ** 4 for d in data) / (len(data) - dof))
-    return res
+    return (sum(standardize(d, b, s) ** 4 for d in data) / (len(data) - dof))
 
 
 def kurtosis_norm(data: numeric, dof: int = 0) -> float:
     """returns kurtosis of normal distributed data"""
 
-    res = kurtosis(data, dof) - 3
-    return res
+    return kurtosis(data, dof) - 3
 
 
 def kurtosis_adv(data: numeric) -> float:
     """returns fixed kurtosis of data"""
 
     k, n = kurtosis(data, 1), len(data)
-    res = (k * n * (n + 1) / ((n - 2) * (n - 3))) - ((3 * ((n - 1) ** 2)) / ((n - 2) * (n - 3)))
-    return res
+    return (k * n * (n + 1) / ((n - 2) * (n - 3))) - ((3 * ((n - 1) ** 2)) / ((n - 2) * (n - 3)))
 
 
 def jarque_bera(data: numeric, dof: int = 0) -> float:
     """returns Jarque-Bera normality test value"""
 
-    res = (len(data) / 6) * (skew(data, dof) ** 2 + ((kurtosis_norm(data, dof) ** 2) / 4))
-    return res
+    return (len(data) / 6) * (skew(data, dof) ** 2 + ((kurtosis_norm(data, dof) ** 2) / 4))
 
 
 def cov(data_a: numeric, data_b: numeric, dof: int = 1) -> float:
     """returns covariance of two random variables"""
 
     b_a, b_b = bar(data_a), bar(data_b)
-    res = sum((a - b_a) * (b - b_b) for a, b in zip(data_a, data_b)) / (len(data_a) - dof)
-    return res
+    return sum((a - b_a) * (b - b_b) for a, b in zip(data_a, data_b)) / (len(data_a) - dof)
 
 
 def pearson(data_a: numeric, data_b: numeric, dof: int = 0) -> float:
@@ -229,15 +201,13 @@ def pearson(data_a: numeric, data_b: numeric, dof: int = 0) -> float:
 
     b_a, s_a = bar(data_a), std(data_a, dof)
     b_b, s_b = bar(data_b), std(data_b, dof)
-    res = sum(standardize(a, b_a, s_a) * standardize(b, b_b, s_b) for a, b in zip(data_a, data_b)) / len(data_a) - dof
-    return res
+    return sum(standardize(a, b_a, s_a) * standardize(b, b_b, s_b) for a, b in zip(data_a, data_b)) / len(data_a) - dof
 
 
 def corrcoef(a: numeric, b: numeric) -> float:
     """returns Pearson's r of two data"""
 
-    res = cov(a, b) / ((cov(a, a) * cov(b, b)) ** 0.5)
-    return res
+    return cov(a, b) / ((cov(a, a) * cov(b, b)) ** 0.5)
 
 
 def factorial(n: int) -> int:
@@ -252,28 +222,25 @@ def factorial(n: int) -> int:
 def factorial_rec(n: int) -> int:
     """returns factorial of number with recursion"""
 
-    return 1 if n == 1 else n * factorial_rec(n - 1)
+    return 1 if n <= 1 else n * factorial_rec(n - 1)
 
 
 def permutation(n: int, k: int) -> float:
     """returns permutation of N things taken k at a time"""
 
-    res = factorial(n) / factorial(n - k)
-    return res
+    return factorial(n) / factorial(n - k)
 
 
 def combination(n: int, k: int) -> float:
     """returns combinations of N things taken k at a time"""
 
-    res = factorial(n) / (factorial(n - k) * factorial(k))
-    return res
+    return factorial(n) / (factorial(n - k) * factorial(k))
 
 
 def multiset(n: int, k: int) -> float:
     """return multiset of N things taken k at a time"""
 
-    res = combination(n + k - 1, k)
-    return res
+    return combination(n + k - 1, k)
 
 
 def bernoulli_d(x: int, p: float, n: int = 1) -> float:
@@ -283,8 +250,7 @@ def bernoulli_d(x: int, p: float, n: int = 1) -> float:
     p: probability
     """
 
-    res = (p ** x) * ((1 - p) ** (n - x))
-    return res
+    return (p ** x) * ((1 - p) ** (n - x))
 
 
 def binom_d(x: int, n: int, p: float) -> float:
@@ -295,8 +261,7 @@ def binom_d(x: int, n: int, p: float) -> float:
     p: probability
     """
 
-    res = combination(n, x) * bernoulli_d(x=x, n=n, p=p)
-    return res
+    return combination(n, x) * bernoulli_d(x=x, n=n, p=p)
 
 
 def binom_c(x: int, n: int, p: float) -> float:
@@ -307,8 +272,7 @@ def binom_c(x: int, n: int, p: float) -> float:
     p: probability
     """
 
-    res = sum(binom_d(i, n, p) for i in range(x + 1))
-    return res
+    return sum(binom_d(i, n, p) for i in range(x + 1))
 
 
 def hyper_d(x: int, M: int, n: int, N: int) -> float:
@@ -320,8 +284,7 @@ def hyper_d(x: int, M: int, n: int, N: int) -> float:
     N: size of population
     """
 
-    res = combination(M, x) * combination(N - M, n - x) / combination(N, n)
-    return res
+    return combination(M, x) * combination(N - M, n - x) / combination(N, n)
 
 
 def hyper_c(x: int, M: int, n: int, N: int) -> float:
@@ -333,8 +296,7 @@ def hyper_c(x: int, M: int, n: int, N: int) -> float:
     N: size of population
     """
 
-    res = sum(combination(M, x) * combination(N - M, n - x) / combination(N, n) for x in range(x + 1))
-    return res
+    return sum(combination(M, x) * combination(N - M, n - x) / combination(N, n) for x in range(x + 1))
 
 
 def pois_d(x: int, l: float) -> float:
@@ -344,8 +306,7 @@ def pois_d(x: int, l: float) -> float:
     l: lambda, expectation of random variable
     """
 
-    res = (math.e ** -l) * (l ** x) / factorial(x)
-    return res
+    return (math.e ** -l) * (l ** x) / factorial(x)
 
 
 def pois_c(x: int, l: float) -> float:
@@ -355,8 +316,7 @@ def pois_c(x: int, l: float) -> float:
     l: lambda, expectation of random variable
     """
 
-    res = sum(pois_d(i, l) for i in range(x + 1))
-    return res
+    return sum(pois_d(i, l) for i in range(x + 1))
 
 
 def geom_d(x: int, p: float) -> float:
@@ -366,8 +326,7 @@ def geom_d(x: int, p: float) -> float:
     p: probability
     """
 
-    res = ((1 - p) ** x) * p
-    return res
+    return ((1 - p) ** x) * p
 
 
 def geom_c(x: int, p: float) -> float:
@@ -377,17 +336,14 @@ def geom_c(x: int, p: float) -> float:
     p: probability
     """
 
-    res = 1 - ((1 - p) ** (x + 1))
-    return res
+    return 1 - ((1 - p) ** (x + 1))
 
 
 def lineFit(x: numeric, y: numeric) -> tuple:
     """returns linear regression coefficient(weight) and intercept of two random variables"""
 
     x_bar, y_bar = bar(x), bar(y)
-    tmp_0 = [(i - x_bar) * j for i, j in zip(x, y)]
-    tmp_1 = [(i - x_bar) * i for i in x]
-    w = sum(tmp_0) / sum(tmp_1)
+    w = sum((x - x_bar) * y for x, y in zip(x, y)) / sum((x - x_bar) * x for x in x)
     i = y_bar - (w * x_bar)
     return i, w
 

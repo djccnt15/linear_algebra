@@ -8,212 +8,181 @@ matrix = list[vector]
 def v_add(*a: vector) -> vector:
     """returns addition of 2 vectors"""
 
-    res: vector = [sum(v) for v in zip(*a)]
-    return res
+    return [sum(v) for v in zip(*a)]
 
 
 def v_sub(a: vector, b: vector) -> vector:
     """returns subtraction of 2 vectors"""
 
-    res: vector = [v - u for v, u in zip(a, b)]
-    return res
+    return [v - u for v, u in zip(a, b)]
 
 
 def v_smul(s: scalar, a: vector) -> vector:
     """returns scalar multiplication of vector"""
 
-    res: vector = [s * v for v in a]
-    return res
+    return [s * v for v in a]
 
 
 def v_hmul(*a: vector) -> vector:
     """returns hadamard product of vectors"""
 
-    res: vector = [reduce(lambda n, m: n * m, v) for v in zip(*a)]
-    return res
+    return [reduce(lambda n, m: n * m, v) for v in zip(*a)]
 
 
 def v_hdiv(a: vector, b: vector) -> vector:
     """returns hadamard division of 2 vectors"""
 
-    res: vector = [v / u for v, u in zip(a, b)]
-    return res
+    return [v / u for v, u in zip(a, b)]
 
 
 def mat_add(*a: matrix) -> matrix:
     """returns addition of matrices"""
 
-    res: matrix = [[sum(v) for v in zip(*i)] for i in zip(*a)]
-    return res
+    return [[sum(v) for v in zip(*i)] for i in zip(*a)]
 
 
 def mat_sub(a: matrix, b: matrix) -> matrix:
     """returns subtraction of matrix"""
 
-    res: matrix = [[v - u for v, u in zip(*i)] for i in zip(a, b)]
-    return res
+    return [[v - u for v, u in zip(*i)] for i in zip(a, b)]
 
 
 def mat_smul(s: scalar, a: matrix) -> matrix:
     """returns scalar multiplication of matrix"""
 
-    res: matrix = [[s * v for v in r] for r in a]
-    return res
+    return [[s * v for v in r] for r in a]
 
 
 def mat_hmul(*a: matrix) -> matrix:
     """returns hadamard product of matrix"""
 
-    res: matrix = [[reduce(lambda n, m: n * m, v) for v in zip(*i)] for i in zip(*a)]
-    return res
+    return [[reduce(lambda n, m: n * m, v) for v in zip(*i)] for i in zip(*a)]
 
 
 def mat_hdiv(a: matrix, b: matrix) -> matrix:
     """returns hadamard division of matrix"""
 
-    res: matrix = [[v / u for v, u in zip(*i)] for i in zip(a, b)]
-    return res
+    return [[v / u for v, u in zip(*i)] for i in zip(a, b)]
 
 
 def mat_mul(a: matrix, b: matrix) -> matrix:
     """returns multiplication of 2 matrices"""
 
-    res: matrix = [[sum(v * u for v, u in zip(r, c)) for c in zip(*b)] for r in a]
-    return res
+    return [[sum(v * u for v, u in zip(r, c)) for c in zip(*b)] for r in a]
 
 
 def mat_mul_all(*a: matrix) -> matrix:
     """returns multiplication of 2 matrices"""
 
-    res: matrix = reduce(mat_mul, [*a])
-    return res
+    return reduce(mat_mul, [*a])
 
 
 def mat_tr(a: matrix) -> scalar:
     """returns trace of matrix"""
 
-    res: scalar = sum(v[i] for i, v in enumerate([*a]))
-    return res
+    return sum(v[i] for i, v in enumerate([*a]))
+
 
 def mat_trans(a: matrix) -> matrix:
     """returns transposed matrix"""
 
-    At: matrix = [list(r) for r in zip(*a)]
-    return At
+    return [list(r) for r in zip(*a)]
 
 
 def symmetric_check(a: matrix) -> bool:
     """checks whether symmetric matrix or not"""
 
-    At: matrix = mat_trans(a)
-    return a == At
+    return a == mat_trans(a)
 
 
 def diag_ele(a: matrix) -> vector:
     """returns diagonal elements of matrix"""
 
-    d: vector = [v[i] for i, v in enumerate([*a])]
-    return d
+    return [v[i] for i, v in enumerate([*a])]
 
 
 def mat_diag(a: matrix) -> matrix:
     """returns diagonal matrix from matrix"""
 
-    D: matrix = [[v if i == j else 0 for j, v in enumerate(r)] for i, r in enumerate(a)]
-    return D
+    return [[v if i == j else 0 for j, v in enumerate(r)] for i, r in enumerate(a)]
 
 
 def mat_bidiag_u(a: matrix) -> matrix:
     """transform matrix into upper bidiagonal matrix"""
 
-    res: matrix = [[0 if i > j or j - i > 1 else v for j, v in enumerate(r)] for i, r in enumerate(a)]
-    return res
+    return [[0 if i > j or j - i > 1 else v for j, v in enumerate(r)] for i, r in enumerate(a)]
 
 
 def mat_bidiag_l(a: matrix) -> matrix:
     """transform matrix into lower bidiagonal matrix"""
 
-    res: matrix = [[0 if i < j or i - j > 1 else v for j, v in enumerate(r)] for i, r in enumerate(a)]
-    return res
+    return [[0 if i < j or i - j > 1 else v for j, v in enumerate(r)] for i, r in enumerate(a)]
 
 
 def mat_identity(n: int) -> matrix:
     """returns n by n sized identity matrix"""
 
-    I: matrix = [[1 if i == j else 0 for j in range(n)] for i in range(n)]
-    return I
+    return [[1 if i == j else 0 for j in range(n)] for i in range(n)]
 
 
 def mat_zeros(r: int, c: int) -> matrix:
     """returns r by c sized zero matrix"""
 
-    Z: matrix = [[0 for _ in range(c)] for _ in range(r)]
-    return Z
+    return [v_zeros(c) for _ in range(r)]
 
 
 def v_zeros(n: int) -> vector:
     """returns n sized zero vector"""
 
-    Z: vector = [0 for _ in range(n)]
-    return Z
+    return [0 for _ in range(n)]
 
 
 def mat_tri_u(a: matrix) -> matrix:
     """transform matrix into upper triangular matrix"""
 
-    res: matrix = [[0 if i > j else v for j, v in enumerate(r)] for i, r in enumerate(a)]
-    return res
+    return [[0 if i > j else v for j, v in enumerate(r)] for i, r in enumerate(a)]
 
 
 def mat_tri_l(a: matrix) -> matrix:
     """transform matrix into lower triangular matrix"""
 
-    res: matrix = [[0 if i < j else v for j, v in enumerate(r)] for i, r in enumerate(a)]
-    return res
+    return [[0 if i < j else v for j, v in enumerate(r)] for i, r in enumerate(a)]
 
 
 def mat_toeplitz(a: vector, b: vector) -> matrix:
     """unite 2 lists into toeplitz matrix"""
 
-    T: matrix = [[a[i - j] if i >= j else b[j - i] for j, _ in enumerate(b)] for i, _ in enumerate(a)]
-    return T
+    return [[a[i - j] if i >= j else b[j - i] for j, _ in enumerate(b)] for i, _ in enumerate(a)]
 
 
 def v_outer(a: vector, b: vector) -> matrix:
     """returns outer/tensor product of 2 vectors"""
 
-    res: matrix = [[v * u for u in b] for v in a]
-    return res
+    return [[v * u for u in b] for v in a]
 
 
 def v_inner(a: vector, b: vector) -> scalar:
     """returns inner product of 2 vectors"""
 
-    res: scalar = sum(v * u for v, u in zip(a, b))
-    return res
+    return sum(v * u for v, u in zip(a, b))
 
 
 def householder(v: vector) -> matrix:
     """transform vector into householder matrix"""
 
-    V: matrix = mat_smul(1 / v_inner(v, v), v_outer(v, v))
-    V: matrix = mat_smul(2, V)
-    H: matrix = mat_sub(mat_identity(len(v)), V)
-    return H
+    return mat_sub(mat_identity(len(v)), mat_smul(2, mat_smul(1 / v_inner(v, v), v_outer(v, v))))
 
 
 def determinant(a: matrix) -> scalar:
     """returns determinant of 2 by 2 matrix"""
 
-    det: scalar = (a[0][0] * a[1][1]) - (a[0][1] * a[1][0])
-    return det
+    return (a[0][0] * a[1][1]) - (a[0][1] * a[1][0])
 
 
 def mat_aug_v(a: matrix, b: vector) -> matrix:
     """transform matrix into vector augmented matrix"""
 
-    res: matrix = [v + [u] for v, u in zip(a, b)]
-    return res
+    return [v + [u] for v, u in zip(a, b)]
 
 
 def mat_coef(a: matrix) -> tuple:
@@ -231,15 +200,13 @@ def mat_pivot(mat: matrix) -> matrix:
     this function just sorts rows as order by descending with first elements of each row
     """
 
-    res: matrix = sorted(mat, key=lambda x: abs(x[0]), reverse=True)
-    return res
+    return sorted(mat, key=lambda x: abs(x[0]), reverse=True)
 
 
 def gauss_eli(a: matrix, b: vector) -> vector:
     """solving equation with Gauss elimination"""
 
-    mat: matrix = mat_aug_v(a, b)
-    mat: matrix = mat_pivot(mat)
+    mat: matrix = mat_pivot(mat_aug_v(a, b))
     n: int = len(mat)
 
     # gauss elimination
@@ -255,7 +222,7 @@ def gauss_eli(a: matrix, b: vector) -> vector:
             mat[i][n] = mat[i][n] - mat[i][k] * mat[k][n]
         mat[i][n] /= mat[i][i]
 
-    x, y = mat_coef(mat)
+    _, y = mat_coef(mat)
 
     return y
 
@@ -283,18 +250,14 @@ def gauss_jordan_eli(mat: matrix) -> matrix:
 def solve_gauss(a: matrix, b: vector) -> vector:
     """solving equation with Gauss-Jordan elimination"""
 
-    mat: matrix = mat_aug_v(a, b)
-    mat: matrix = mat_pivot(mat)
-    mat: matrix = gauss_jordan_eli(mat)
-    x, y = mat_coef(mat)
+    _, y = mat_coef(gauss_jordan_eli(mat_pivot(mat_aug_v(a, b))))
     return y
 
 
 def mat_aug_mat(a: matrix, b: matrix) -> matrix:
     """transform matrix into matrix augmented matrix"""
 
-    res: matrix = [v + u for v, u in zip(a, b)]
-    return res
+    return [v + u for v, u in zip(a, b)]
 
 
 def mat_coef_inv(a: matrix, b: int) -> tuple:
@@ -309,11 +272,7 @@ def mat_inv(a: matrix) -> matrix:
     """returns inverted matrix"""
 
     n: int = len(a)
-    i: matrix = mat_identity(n)
-    mat: matrix = mat_aug_mat(a, i)
-    mat: matrix = mat_pivot(mat)
-    mat: matrix = gauss_jordan_eli(mat)
-    x, res = mat_coef_inv(mat, n)
+    _, res = mat_coef_inv(gauss_jordan_eli(mat_pivot(mat_aug_mat(a, mat_identity(n)))), n)
 
     return res
 
@@ -347,8 +306,7 @@ def mat_inv(a: matrix) -> matrix:
 def norm(a: vector) -> scalar:
     """returns euclidean norm of vector"""
 
-    res: scalar = sum(i ** 2 for i in a) ** 0.5
-    return res
+    return sum(i ** 2 for i in a) ** 0.5
 
 
 norm_euclidean = norm
@@ -357,30 +315,25 @@ norm_euclidean = norm
 def norm_manhattan(a: vector) -> scalar:
     """returns manhattan norm of vector"""
 
-    res = sum(abs(i) for i in a)
-    return res
+    return sum(abs(i) for i in a)  # type: ignore
 
 
 def cos_similarity(a: vector, b: vector) -> scalar:
     """returns cosine similarity of 2 vectors"""
 
-    res: scalar = v_inner(a, b) / (norm(a) * norm(b))
-    return res
+    return v_inner(a, b) / (norm(a) * norm(b))
 
 
 def normalize(a: vector) -> vector:
     """normalize vector"""
 
-    n: vector = [v / norm(a) for v in a]
-    return n
+    return [v / norm(a) for v in a]
 
 
 def proj(u: vector, v: vector) -> vector:
     """project 'u' vector to 'v' vector"""
 
-    tmp: scalar = v_inner(u, v) / v_inner(v, v)
-    res: vector = v_smul(tmp, v)
-    return res
+    return v_smul(v_inner(u, v) / v_inner(v, v), v)
 
 
 def gram_schmidt(s: matrix) -> matrix:
@@ -391,8 +344,7 @@ def gram_schmidt(s: matrix) -> matrix:
         if i == 0:
             res.append(s[i])
         else:
-            tmp = v_sub(s[i], v_add(*[proj(s[i], res[j]) for j in range(i)]))
-            res.append(tmp)
+            res.append(v_sub(s[i], v_add(*[proj(s[i], res[j]) for j in range(i)])))
     return res
 
 
@@ -405,7 +357,6 @@ def qr_gramschmidt(a: matrix) -> tuple:
 
     q_tmp: matrix = [normalize(i) for i in gs]
     q: matrix = mat_trans(q_tmp)
-
     r: matrix = [[0 if i > j else v_inner(mat[j], q_tmp[i]) for j in range(n)] for i in range(n)]
 
     return q, r
@@ -413,24 +364,16 @@ def qr_gramschmidt(a: matrix) -> tuple:
 
 # QR decomposition/factorization with householder matrix
 def v_sign(a: vector) -> int:
-    """get sign of vector == returns sign of first element of vector"""
+    """get sign of vector(returns sign of first element of vector)"""
 
-    res: int = 1
-    if a[0] < 0: res: int = -1
-    return res
+    return -1 if a[0] < 0 else 1
 
 
 def ele_h(a: matrix) -> matrix:
     """get element of householder matrix except last one"""
 
     at: matrix = mat_trans(a)
-    nm: scalar = norm(at[0])
-    e: vector = [1 if j == 0 else 0 for j in range(len(at[0]))]
-    sign: int = v_sign(at[0])
-    tmp: vector = v_smul(sign * nm, e)
-    v: vector = v_add(at[0], tmp)
-    h: matrix = householder(v)
-    return h
+    return householder(v_add(at[0], v_smul(v_sign(at[0]) * norm(at[0]), [1 if j == 0 else 0 for j in range(len(at[0]))])))
 
 
 def qr_householder(a: matrix) -> tuple:
@@ -472,7 +415,7 @@ def qr_householder(a: matrix) -> tuple:
                 for i in range(m)] for j in range(m)] for h_tmp in h_list_tmp]
 
     '''
-    interpretation list comprehension of h_list is below
+    interpretation of list comprehension of h_list is below
 
     h_list = []
     for h_tmp in h_list_tmp:
@@ -527,8 +470,7 @@ def eig_qr(a: matrix) -> tuple:
 def orthogonal_check(a: matrix) -> bool:
     """checks whether orthogonal matrix or not"""
 
-    At: matrix = mat_trans(a)
-    tmp: matrix = mat_mul(a, At)
+    tmp: matrix = mat_mul(a, mat_trans(a))
     tmp: matrix = mat_smul(1 / tmp[0][0], tmp)  # line for evading floating point error
     I: matrix = mat_identity(len(a))
 
@@ -538,18 +480,13 @@ def orthogonal_check(a: matrix) -> bool:
 def svd(a: matrix) -> tuple:
     """singular value decomposition"""
 
-    at: matrix = mat_trans(a)
-    ata: matrix = mat_mul(at, a)
-    e, v = eig_qr(ata)
+    e, v = eig_qr(mat_mul(mat_trans(a), a))
 
     s: vector = [i ** 0.5 for i in e]
 
     vt: matrix = mat_trans(v)
 
-    av: matrix = mat_mul(a, v)
-    avt: matrix = mat_trans(av)
-    ut: matrix = [normalize(v) for v in avt]
-
+    ut: matrix = [normalize(v) for v in mat_trans(mat_mul(a, v))]
     u: matrix = mat_trans(ut)
 
     return u, s, vt
