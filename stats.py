@@ -243,7 +243,7 @@ def multiset(n: int, k: int) -> float:
     return combination(n + k - 1, k)
 
 
-def bernoulli_d(x: int, p: float, n: int = 1) -> float:
+def bernoulli_d(p: float, x: int = 0 | 1, n: int = 1) -> float:
     """
     returns probability of bernoulli distribution
     x: case
@@ -264,7 +264,7 @@ def binom_d(x: int, n: int, p: float) -> float:
     return combination(n, x) * bernoulli_d(x=x, n=n, p=p)
 
 
-def binom_c(x: int, n: int, p: float) -> float:
+def binom_c(x: int, n: int, p: float, start: int = 0) -> float:
     """
     returns cumulative probability of binom distribution
     x: case
@@ -272,7 +272,7 @@ def binom_c(x: int, n: int, p: float) -> float:
     p: probability
     """
 
-    return sum(binom_d(i, n, p) for i in range(x + 1))
+    return sum(binom_d(i, n, p) for i in range(start, x + 1))
 
 
 def hyper_d(x: int, M: int, n: int, N: int) -> float:
@@ -287,7 +287,7 @@ def hyper_d(x: int, M: int, n: int, N: int) -> float:
     return combination(M, x) * combination(N - M, n - x) / combination(N, n)
 
 
-def hyper_c(x: int, M: int, n: int, N: int) -> float:
+def hyper_c(x: int, M: int, n: int, N: int, start: int = 0) -> float:
     """
     returns cumulative probability of hypergeometric distribution
     x: case
@@ -296,7 +296,7 @@ def hyper_c(x: int, M: int, n: int, N: int) -> float:
     N: size of population
     """
 
-    return sum(combination(M, x) * combination(N - M, n - x) / combination(N, n) for x in range(x + 1))
+    return sum(hyper_d(x=x, n=n, N=N, M=M) for x in range(start, x + 1))
 
 
 def pois_d(x: int, l: float) -> float:
@@ -309,14 +309,14 @@ def pois_d(x: int, l: float) -> float:
     return (math.e ** -l) * (l ** x) / factorial(x)
 
 
-def pois_c(x: int, l: float) -> float:
+def pois_c(x: int, l: float, start: int = 0) -> float:
     """
     returns cumulative probability of poisson distribution
     x: case
     l: lambda, expectation of random variable
     """
 
-    return sum(pois_d(i, l) for i in range(x + 1))
+    return sum(pois_d(i, l) for i in range(start, x + 1))
 
 
 def geom_d(x: int, p: float) -> float:
@@ -337,6 +337,38 @@ def geom_c(x: int, p: float) -> float:
     """
 
     return 1 - ((1 - p) ** (x + 1))
+
+
+def nbinom_d(x: int, r: int, p: float) -> float:
+    """
+    returns probability of negative binomial distribution
+    x: number of failures
+    r: number of success
+    p: probability
+    """
+
+    return combination(x + r - 1, r - 1) * (p ** r) * ((1 - p) ** x)
+
+
+def nbinom_c(x: int, r: int, p: float, start: int = 0) -> float:
+    """
+    returns cumulative probability of negative binomial distribution
+    x: number of failures
+    r: number of success
+    p: probability
+    """
+
+    return sum(nbinom_d(i, r, p) for i in range(start, x + 1))
+
+
+def multi_d(x: list[int], p: list[float]) -> float:
+    """
+    returns probability of multinomial distribution
+    x: cases
+    p: probability of each case
+    """
+
+    return factorial(sum(x)) / production(factorial(v) for v in x) * production(p ** x for p, x in zip(p, x))  # type: ignore
 
 
 def lineFit(x: numeric, y: numeric) -> tuple:
@@ -408,12 +440,17 @@ if __name__ == "__main__":
     print(f'combination of 10 things taken 7: {combination(10, 7)}')
     print(f'multiset of 10 things taken 7: {multiset(10, 7)}')
 
-    print(f'probability of bernoulli distribution: {[bernoulli_d(i, 1/3) for i in range(4)]}')
+    print(f'probability of bernoulli distribution: {[bernoulli_d(x=i, p=0.2) for i in range(2)]}')
     print(f'probability of binom distribution: {binom_d(8, 15, 0.5)}')
     print(f'cumulative probability of binom distribution: {binom_c(8, 15, 0.5)}')
     print(f'probability of hypergeometric distribution: {hyper_d(x=1, M=4, n=3, N=10)}')
     print(f'cumulative probability of hypergeometric distribution: {hyper_c(x=1, M=4, n=3, N=10)}')
     print(f'probability of poisson and binom distribution: {pois_d(x=2, l=2)}, {binom_d(x=2, n=20000, p=1/10000)}')
     print(f'cumulative probability of poisson and binom distribution: {pois_c(x=2, l=2)}, {binom_c(x=2, n=20000, p=1/10000)}')
+    print(f'probability of geometric distribution: {geom_d(x=3, p=0.3)}')
+    print(f'cumulative probability of geometric distribution: {geom_c(x=5, p=0.3)}')
+    print(f'probability of negative binomial distribution: {nbinom_d(x=4, r=3, p=0.3)}')
+    print(f'cumulative probability of negative binomial distribution: {nbinom_d(x=4, r=3, p=0.3)}')
+    print(f'probability of multinomial distribution: {multi_d(x=[5, 6, 9], p=[0.3, 0.4, 0.3])}')
 
     print(f'linear regression of a, b: {lineFit(f, g)}')
