@@ -1,6 +1,8 @@
 import math
 
-numeric = list[int | float]
+from common import *
+
+numeric = vector
 
 
 def freq(data: numeric) -> dict:
@@ -38,21 +40,6 @@ def mean_weight(data: numeric, weights: numeric) -> float:
     """returns weighted mean"""
 
     return sum(v * w for v, w in zip(data, weights)) / sum(weights)
-
-
-def production(data: numeric) -> float:
-    """product all elements in data with for loop"""
-
-    res = 1
-    for i in data:
-        res *= i
-    return res
-
-
-def production_rec(data: numeric) -> float:
-    """product all elements in data with recursion"""
-
-    return data[0] if len(data) == 1 else data[0] * production_rec(data[1:])
 
 
 def mean_geom(data: numeric) -> float:
@@ -208,21 +195,6 @@ def corrcoef(a: numeric, b: numeric) -> float:
     """returns Pearson's r of two data"""
 
     return cov(a, b) / ((cov(a, a) * cov(b, b)) ** 0.5)
-
-
-def factorial(n: int) -> int:
-    """returns factorial of number with for loop"""
-
-    res = 1
-    for i in range(1, n + 1):
-        res *= i
-    return res
-
-
-def factorial_rec(n: int) -> int:
-    """returns factorial of number with recursion"""
-
-    return 1 if n <= 1 else n * factorial_rec(n - 1)
 
 
 def permutation(n: int, k: int) -> float:

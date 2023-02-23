@@ -1,8 +1,6 @@
 from functools import reduce
 
-scalar = int | float
-vector = list[scalar]
-matrix = list[vector]
+from common import *
 
 
 def v_add(*a: vector) -> vector:
@@ -26,7 +24,7 @@ def v_smul(s: scalar, a: vector) -> vector:
 def v_hmul(*a: vector) -> vector:
     """returns hadamard product of vectors"""
 
-    return [reduce(lambda n, m: n * m, v) for v in zip(*a)]
+    return [production(v) for v in zip(*a)]  # type: ignore
 
 
 def v_hdiv(a: vector, b: vector) -> vector:
@@ -56,7 +54,7 @@ def mat_smul(s: scalar, a: matrix) -> matrix:
 def mat_hmul(*a: matrix) -> matrix:
     """returns hadamard product of matrix"""
 
-    return [[reduce(lambda n, m: n * m, v) for v in zip(*i)] for i in zip(*a)]
+    return [[production(v) for v in zip(*i)] for i in zip(*a)]  # type: ignore
 
 
 def mat_hdiv(a: matrix, b: matrix) -> matrix:
@@ -72,7 +70,7 @@ def mat_mul(a: matrix, b: matrix) -> matrix:
 
 
 def mat_mul_all(*a: matrix) -> matrix:
-    """returns multiplication of 2 matrices"""
+    """returns multiplication of given matrices"""
 
     return reduce(mat_mul, [*a])
 
