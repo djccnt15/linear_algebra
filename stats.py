@@ -1,6 +1,6 @@
 import math
 
-from common import *
+from common import vector, production, factorial, production_rec, factorial_rec
 
 numeric = vector
 
@@ -21,7 +21,10 @@ def freq_cum(data: numeric) -> dict:
     """returns cumulative frequency of sorted value"""
 
     data_sort = sorted(list(set(data)))
-    return {val: sum(data.count(j) for j in data_sort[:i + 1]) for i, val in enumerate(data_sort)}
+    return {
+        val: sum(data.count(j) for j in data_sort[: i + 1])
+        for i, val in enumerate(data_sort)
+    }
 
 
 def bar(data: numeric) -> float:
@@ -154,7 +157,7 @@ def kurtosis(data: numeric, dof: int = 0) -> float:
     """returns kurtosis of data"""
 
     b, s = bar(data), std(data, dof)
-    return (sum(standardize(d, b, s) ** 4 for d in data) / (len(data) - dof))
+    return sum(standardize(d, b, s) ** 4 for d in data) / (len(data) - dof)
 
 
 def kurtosis_norm(data: numeric, dof: int = 0) -> float:
@@ -167,20 +170,26 @@ def kurtosis_adv(data: numeric) -> float:
     """returns fixed kurtosis of data"""
 
     k, n = kurtosis(data, 1), len(data)
-    return (k * n * (n + 1) / ((n - 2) * (n - 3))) - ((3 * ((n - 1) ** 2)) / ((n - 2) * (n - 3)))
+    return (k * n * (n + 1) / ((n - 2) * (n - 3))) - (
+        (3 * ((n - 1) ** 2)) / ((n - 2) * (n - 3))
+    )
 
 
 def jarque_bera(data: numeric, dof: int = 0) -> float:
     """returns Jarque-Bera normality test value"""
 
-    return (len(data) / 6) * (skew(data, dof) ** 2 + ((kurtosis_norm(data, dof) ** 2) / 4))
+    return (len(data) / 6) * (
+        skew(data, dof) ** 2 + ((kurtosis_norm(data, dof) ** 2) / 4)
+    )
 
 
 def cov(data_a: numeric, data_b: numeric, dof: int = 1) -> float:
     """returns covariance of two random variables"""
 
     b_a, b_b = bar(data_a), bar(data_b)
-    return sum((a - b_a) * (b - b_b) for a, b in zip(data_a, data_b)) / (len(data_a) - dof)
+    return sum((a - b_a) * (b - b_b) for a, b in zip(data_a, data_b)) / (
+        len(data_a) - dof
+    )
 
 
 def pearson(data_a: numeric, data_b: numeric, dof: int = 0) -> float:
@@ -188,7 +197,13 @@ def pearson(data_a: numeric, data_b: numeric, dof: int = 0) -> float:
 
     b_a, s_a = bar(data_a), std(data_a, dof)
     b_b, s_b = bar(data_b), std(data_b, dof)
-    return sum(standardize(a, b_a, s_a) * standardize(b, b_b, s_b) for a, b in zip(data_a, data_b)) / len(data_a) - dof
+    return (
+        sum(
+            standardize(a, b_a, s_a) * standardize(b, b_b, s_b)
+            for a, b in zip(data_a, data_b)
+        )
+        / len(data_a)
+    ) - dof
 
 
 def corrcoef(a: numeric, b: numeric) -> float:
@@ -222,7 +237,7 @@ def bernoulli_d(p: float, x: int = 0 | 1, n: int = 1) -> float:
     p: probability
     """
 
-    return (p ** x) * ((1 - p) ** (n - x))
+    return (p**x) * ((1 - p) ** (n - x))
 
 
 def binom_d(x: int, n: int, p: float) -> float:
@@ -271,24 +286,24 @@ def hyper_c(x: int, M: int, n: int, N: int, start: int = 0) -> float:
     return sum(hyper_d(x=x, n=n, N=N, M=M) for x in range(start, x + 1))
 
 
-def pois_d(x: int, l: float) -> float:
+def pois_d(x: int, lam: float) -> float:
     """
     returns probability of poisson distribution
     x: case
-    l: lambda, expectation of random variable
+    lam: lambda, expectation of random variable
     """
 
-    return (math.e ** -l) * (l ** x) / factorial(x)
+    return (math.e**-lam) * (lam**x) / factorial(x)
 
 
-def pois_c(x: int, l: float, start: int = 0) -> float:
+def pois_c(x: int, lam: float, start: int = 0) -> float:
     """
     returns cumulative probability of poisson distribution
     x: case
-    l: lambda, expectation of random variable
+    lam: lambda, expectation of random variable
     """
 
-    return sum(pois_d(i, l) for i in range(start, x + 1))
+    return sum(pois_d(i, lam) for i in range(start, x + 1))
 
 
 def geom_d(x: int, p: float) -> float:
@@ -319,7 +334,7 @@ def nbinom_d(x: int, r: int, p: float) -> float:
     p: probability
     """
 
-    return combination(x + r - 1, r - 1) * (p ** r) * ((1 - p) ** x)
+    return combination(x + r - 1, r - 1) * (p**r) * ((1 - p) ** x)
 
 
 def nbinom_c(x: int, r: int, p: float, start: int = 0) -> float:
@@ -340,7 +355,7 @@ def multi_d(x: list[int], p: list[float]) -> float:
     p: probability of each case
     """
 
-    return factorial(sum(x)) / production(factorial(v) for v in x) * production(p ** x for p, x in zip(p, x))  # type: ignore
+    return factorial(sum(x)) / production(factorial(v) for v in x) * production(p**x for p, x in zip(p, x))  # type: ignore
 
 
 def lineFit(x: numeric, y: numeric) -> tuple:
@@ -354,75 +369,87 @@ def lineFit(x: numeric, y: numeric) -> tuple:
 
 if __name__ == "__main__":
     a: numeric = [1, 2, 1, 3, 1, 2, 3, 1, 1, 2, 1, 1]
-    print(f'\n{a=}\n')
+    print(f"\n{a=}\n")
 
-    print(f'frequency of a: {freq(a)}')
-    print(f'relative frequency of a: {freq_rel(a)}')
-    print(f'cumulative frequency of a: {freq_cum(a)}')
+    print(f"frequency of a: {freq(a)}")
+    print(f"relative frequency of a: {freq_rel(a)}")
+    print(f"cumulative frequency of a: {freq_cum(a)}")
 
     b: numeric = [2, 3, 4, 5, 6, 7, 1, 2, 3, 4]
-    print(f'\n{b=}\n')
+    print(f"\n{b=}\n")
 
-    print(f'deviation of each value of b: {devi(b)}')
+    print(f"deviation of each value of b: {devi(b)}")
 
     c: numeric = [1, 2, 3, 4, 5]
     d: numeric = [5, 4, 3, 2, 1]
-    print(f'\n{c=}\n{d=}\n')
+    print(f"\n{c=}\n{d=}\n")
 
-    print(f'weighted mean of c as data, d as weight: {mean_weight(c, d)}')
-    print(f'product of c: {production(c)}')
-    print(f'product of c: {production_rec(c)}')
-    print(f'geometric mean of c: {mean_geom(c)}')
-    print(f'harmonic mean of c: {mean_harm(c)}')
-    print(f'trimmed mean of c, k=1: {mean_trimmed(c, 1)}')
+    print(f"weighted mean of c as data, d as weight: {mean_weight(c, d)}")
+    print(f"product of c: {production(c)}")
+    print(f"product of c: {production_rec(c)}")
+    print(f"geometric mean of c: {mean_geom(c)}")
+    print(f"harmonic mean of c: {mean_harm(c)}")
+    print(f"trimmed mean of c, k=1: {mean_trimmed(c, 1)}")
 
     c: numeric = [1, 1, 1, 2, 2, 3, 3, 3, 4, 4]
     d: numeric = [1, 2, 3, 4, 5]
-    print(f'\n{c=}\n{d=}\n')
+    print(f"\n{c=}\n{d=}\n")
 
-    print(f'median of c: {median(c)}')
-    print(f'median of d: {median(d)}')
-    print(f'mode of c: {mode(c)}')
-    print(f'mode of d: {mode(d)}')
+    print(f"median of c: {median(c)}")
+    print(f"median of d: {median(d)}")
+    print(f"mode of c: {mode(c)}")
+    print(f"mode of d: {mode(d)}")
 
     e: numeric = [-5, -2, 1, 2, 3, 4, 5, 6, 7, 8, 11, 13, 15, 17, 19, 25, 87, 99, 100]
     q: numeric = [0.25, 0.5, 0.75]
-    print(f'\n{e=}\n{q=}\n')
+    print(f"\n{e=}\n{q=}\n")
 
-    print(f'Q1, Q2, Q3 of e: {[quantile(e, q) for q in q]}')
-    print(f'IQR range of e: {iqr_range(data=e)}')
-    print(f'sample variance of e: {var(e, 1)}')
-    print(f'variance of e: {var(e)}')
-    print(f'standard deviation of e: {std(e, 1)}')
-    print(f'coefficient of variation of e: {variation(e)}')
-    print(f'skewness of e: {skew(e, 1)}')
-    print(f'kurtosis of e: {kurtosis_norm(e, 1)}')
+    print(f"Q1, Q2, Q3 of e: {[quantile(e, q) for q in q]}")
+    print(f"IQR range of e: {iqr_range(data=e)}")
+    print(f"sample variance of e: {var(e, 1)}")
+    print(f"variance of e: {var(e)}")
+    print(f"standard deviation of e: {std(e, 1)}")
+    print(f"coefficient of variation of e: {variation(e)}")
+    print(f"skewness of e: {skew(e, 1)}")
+    print(f"kurtosis of e: {kurtosis_norm(e, 1)}")
 
     f: numeric = [2.23, 4.78, 7.21, 9.37, 11.64, 14.23, 16.55, 18.70, 21.05, 23.21]
     g: numeric = [139, 123, 115, 96, 62, 54, 10, -3, -13, -55]
-    print(f'\n{c=}\n{g=}\n')
+    print(f"\n{c=}\n{g=}\n")
 
-    print(f'cov of a, b: {cov(f, g)}')
-    print(f'correlation pearson: {pearson(f, g)}')
-    print(f'correlation pearson: {corrcoef(f, g)}')
+    print(f"cov of a, b: {cov(f, g)}")
+    print(f"correlation pearson: {pearson(f, g)}")
+    print(f"correlation pearson: {corrcoef(f, g)}")
 
-    print(f'factorial of 10: {factorial(10)}')
-    print(f'factorial of 10: {factorial_rec(10)}')
-    print(f'permutation of 10 things taken 7: {permutation(10, 7)}')
-    print(f'combination of 10 things taken 7: {combination(10, 7)}')
-    print(f'multiset of 10 things taken 7: {multiset(10, 7)}')
+    print(f"factorial of 10: {factorial(10)}")
+    print(f"factorial of 10: {factorial_rec(10)}")
+    print(f"permutation of 10 things taken 7: {permutation(10, 7)}")
+    print(f"combination of 10 things taken 7: {combination(10, 7)}")
+    print(f"multiset of 10 things taken 7: {multiset(10, 7)}")
 
-    print(f'probability of bernoulli distribution: {[bernoulli_d(x=i, p=0.2) for i in range(2)]}')
-    print(f'probability of binom distribution: {binom_d(8, 15, 0.5)}')
-    print(f'cumulative probability of binom distribution: {binom_c(8, 15, 0.5)}')
-    print(f'probability of hypergeometric distribution: {hyper_d(x=1, M=4, n=3, N=10)}')
-    print(f'cumulative probability of hypergeometric distribution: {hyper_c(x=1, M=4, n=3, N=10)}')
-    print(f'probability of poisson and binom distribution: {pois_d(x=2, l=2)}, {binom_d(x=2, n=20000, p=1/10000)}')
-    print(f'cumulative probability of poisson and binom distribution: {pois_c(x=2, l=2)}, {binom_c(x=2, n=20000, p=1/10000)}')
-    print(f'probability of geometric distribution: {geom_d(x=3, p=0.3)}')
-    print(f'cumulative probability of geometric distribution: {geom_c(x=5, p=0.3)}')
-    print(f'probability of negative binomial distribution: {nbinom_d(x=4, r=3, p=0.3)}')
-    print(f'cumulative probability of negative binomial distribution: {nbinom_d(x=4, r=3, p=0.3)}')
-    print(f'probability of multinomial distribution: {multi_d(x=[5, 6, 9], p=[0.3, 0.4, 0.3])}')
+    print(
+        f"probability of bernoulli distribution: {[bernoulli_d(x=i, p=0.2) for i in range(2)]}"
+    )
+    print(f"probability of binom distribution: {binom_d(8, 15, 0.5)}")
+    print(f"cumulative probability of binom distribution: {binom_c(8, 15, 0.5)}")
+    print(f"probability of hypergeometric distribution: {hyper_d(x=1, M=4, n=3, N=10)}")
+    print(
+        f"cumulative probability of hypergeometric distribution: {hyper_c(x=1, M=4, n=3, N=10)}"
+    )
+    print(
+        f"probability of poisson and binom distribution: {pois_d(x=2, lam=2)}, {binom_d(x=2, n=20000, p=1/10000)}"
+    )
+    print(
+        f"cumulative probability of poisson and binom distribution: {pois_c(x=2, lam=2)}, {binom_c(x=2, n=20000, p=1/10000)}"
+    )
+    print(f"probability of geometric distribution: {geom_d(x=3, p=0.3)}")
+    print(f"cumulative probability of geometric distribution: {geom_c(x=5, p=0.3)}")
+    print(f"probability of negative binomial distribution: {nbinom_d(x=4, r=3, p=0.3)}")
+    print(
+        f"cumulative probability of negative binomial distribution: {nbinom_d(x=4, r=3, p=0.3)}"
+    )
+    print(
+        f"probability of multinomial distribution: {multi_d(x=[5, 6, 9], p=[0.3, 0.4, 0.3])}"
+    )
 
-    print(f'linear regression of a, b: {lineFit(f, g)}')
+    print(f"linear regression of a, b: {lineFit(f, g)}")

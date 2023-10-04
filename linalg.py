@@ -1,6 +1,6 @@
 from functools import reduce
 
-from common import *
+from common import scalar, vector, matrix, production
 
 
 def v_add(*a: vector) -> vector:
@@ -108,13 +108,19 @@ def mat_diag(a: matrix) -> matrix:
 def mat_bidiag_u(a: matrix) -> matrix:
     """transform matrix into upper bidiagonal matrix"""
 
-    return [[0 if i > j or j - i > 1 else v for j, v in enumerate(r)] for i, r in enumerate(a)]
+    return [
+        [0 if i > j or j - i > 1 else v for j, v in enumerate(r)]
+        for i, r in enumerate(a)
+    ]
 
 
 def mat_bidiag_l(a: matrix) -> matrix:
     """transform matrix into lower bidiagonal matrix"""
 
-    return [[0 if i < j or i - j > 1 else v for j, v in enumerate(r)] for i, r in enumerate(a)]
+    return [
+        [0 if i < j or i - j > 1 else v for j, v in enumerate(r)]
+        for i, r in enumerate(a)
+    ]
 
 
 def mat_identity(n: int) -> matrix:
@@ -150,7 +156,10 @@ def mat_tri_l(a: matrix) -> matrix:
 def mat_toeplitz(a: vector, b: vector) -> matrix:
     """unite 2 lists into toeplitz matrix"""
 
-    return [[a[i - j] if i >= j else b[j - i] for j, _ in enumerate(b)] for i, _ in enumerate(a)]
+    return [
+        [a[i - j] if i >= j else b[j - i] for j, _ in enumerate(b)]
+        for i, _ in enumerate(a)
+    ]
 
 
 def v_outer(a: vector, b: vector) -> matrix:
@@ -168,7 +177,9 @@ def v_inner(a: vector, b: vector) -> scalar:
 def householder(v: vector) -> matrix:
     """transform vector into householder matrix"""
 
-    return mat_sub(mat_identity(len(v)), mat_smul(2, mat_smul(1 / v_inner(v, v), v_outer(v, v))))
+    return mat_sub(
+        mat_identity(len(v)), mat_smul(2, mat_smul(1 / v_inner(v, v), v_outer(v, v)))
+    )
 
 
 def determinant(a: matrix) -> scalar:
@@ -194,7 +205,8 @@ def mat_coef(a: matrix) -> tuple:
 def mat_pivot(mat: matrix) -> matrix:
     """
     returns pivoted matrix
-    this is not actual "mathematical" pivoting as this function not selecting rows which first element is 1
+    this is not actual "mathematical" pivotingas this function not selecting rows
+    which first element is 1
     this function just sorts rows as order by descending with first elements of each row
     """
 
@@ -270,7 +282,9 @@ def mat_inv(a: matrix) -> matrix:
     """returns inverted matrix"""
 
     n: int = len(a)
-    _, res = mat_coef_inv(gauss_jordan_eli(mat_pivot(mat_aug_mat(a, mat_identity(n)))), n)
+    _, res = mat_coef_inv(
+        gauss_jordan_eli(mat_pivot(mat_aug_mat(a, mat_identity(n)))), n
+    )
 
     return res
 
@@ -304,7 +318,7 @@ def mat_inv(a: matrix) -> matrix:
 def norm(a: vector) -> scalar:
     """returns euclidean norm of vector"""
 
-    return sum(i ** 2 for i in a) ** 0.5
+    return sum(i**2 for i in a) ** 0.5
 
 
 norm_euclidean = norm
@@ -355,7 +369,9 @@ def qr_gramschmidt(a: matrix) -> tuple:
 
     q_tmp: matrix = [normalize(i) for i in gs]
     q: matrix = mat_trans(q_tmp)
-    r: matrix = [[0 if i > j else v_inner(mat[j], q_tmp[i]) for j in range(n)] for i in range(n)]
+    r: matrix = [
+        [0 if i > j else v_inner(mat[j], q_tmp[i]) for j in range(n)] for i in range(n)
+    ]
 
     return q, r
 
@@ -371,7 +387,15 @@ def ele_h(a: matrix) -> matrix:
     """get element of householder matrix except last one"""
 
     at: matrix = mat_trans(a)
-    return householder(v_add(at[0], v_smul(v_sign(at[0]) * norm(at[0]), [1 if j == 0 else 0 for j in range(len(at[0]))])))
+    return householder(
+        v_add(
+            at[0],
+            v_smul(
+                v_sign(at[0]) * norm(at[0]),
+                [1 if j == 0 else 0 for j in range(len(at[0]))],
+            ),
+        )
+    )
 
 
 def qr_householder(a: matrix) -> tuple:
@@ -389,13 +413,20 @@ def qr_householder(a: matrix) -> tuple:
             tmp_res: matrix = mat_mul(res, a)
 
         elif i < n - 1:
-            an = [[tmp_res[j][k] for k in range(1, len(tmp_res[0]))] for j in range(1, len(tmp_res))]
+            an = [
+                [tmp_res[j][k] for k in range(1, len(tmp_res[0]))]
+                for j in range(1, len(tmp_res))
+            ]
             res: matrix = ele_h(an)
             h_list_tmp.append(res)
             tmp_res: matrix = mat_mul(res, an)
 
         else:
-            an = [tmp_res[j][k] for k in range(1, len(tmp_res[0])) for j in range(1, len(tmp_res))]
+            an = [
+                tmp_res[j][k]
+                for k in range(1, len(tmp_res[0]))
+                for j in range(1, len(tmp_res))
+            ]
             nm: scalar = norm(an)
             e: vector = [1 if j == 0 else 0 for j in range(len(an))]
             sign: int = v_sign(an)
@@ -407,12 +438,22 @@ def qr_householder(a: matrix) -> tuple:
     # convert househelder matrixes to H_{i} form
     m: int = len(a)
     I: matrix = mat_identity(m)
-    h_list = [h_tmp if len(h_tmp) == m \
-        else [[I[i][j] if i < m - len(h_tmp) or j < m - len(h_tmp) \
-            else h_tmp[i - (m - len(h_tmp))][j - (m - len(h_tmp))] \
-                for i in range(m)] for j in range(m)] for h_tmp in h_list_tmp]
+    h_list = [
+        h_tmp
+        if len(h_tmp) == m
+        else [
+            [
+                I[i][j]
+                if i < m - len(h_tmp) or j < m - len(h_tmp)
+                else h_tmp[i - (m - len(h_tmp))][j - (m - len(h_tmp))]
+                for i in range(m)
+            ]
+            for j in range(m)
+        ]
+        for h_tmp in h_list_tmp
+    ]
 
-    '''
+    """
     interpretation of list comprehension of h_list is below
 
     h_list = []
@@ -432,7 +473,7 @@ def qr_householder(a: matrix) -> tuple:
                         row.append(h_tmp[i - (m - p)][j - (m - p)])
                 tmp.append(row)
         h_list.append(tmp)
-    '''
+    """
 
     # calculate Q
     q: matrix = mat_identity(len(h_list[0]))
@@ -480,7 +521,7 @@ def svd(a: matrix) -> tuple:
 
     e, v = eig_qr(mat_mul(mat_trans(a), a))
 
-    s: vector = [i ** 0.5 for i in e]
+    s: vector = [i**0.5 for i in e]
 
     vt: matrix = mat_trans(v)
 
@@ -507,7 +548,7 @@ def lu_decomp(a: matrix) -> tuple:
         u_tmp = [ele * val for ele in u_tmp]
         u.append(u_tmp)
 
-        for j in range(i+1, n):
+        for j in range(i + 1, n):
             r = a[j]
             a_tmp = [ele * -r[i] for ele in u_tmp]
             l[j][i] = r[i]
@@ -519,107 +560,107 @@ def lu_decomp(a: matrix) -> tuple:
 if __name__ == "__main__":
     a: vector = [1, 2, 3]
     b: vector = [2, 4, 8]
-    print(f'\n{a=}\n{b=}\n')
+    print(f"\n{a=}\n{b=}\n")
 
-    print(f'addition of vector: {v_add(a, b)}')
-    print(f'subtraction of vector: {v_sub(a, b)}')
-    print(f'scalar multiplication of vector: {v_smul(3, a)}')
-    print(f'hadamard product of vector: {v_hmul(a, b)}')
-    print(f'hadamard division of vector: {v_hdiv(a, b)}')
+    print(f"addition of vector: {v_add(a, b)}")
+    print(f"subtraction of vector: {v_sub(a, b)}")
+    print(f"scalar multiplication of vector: {v_smul(3, a)}")
+    print(f"hadamard product of vector: {v_hmul(a, b)}")
+    print(f"hadamard division of vector: {v_hdiv(a, b)}")
 
     c: matrix = [[1, 2], [3, 4]]
     d: matrix = [[5, 6], [7, 8]]
-    print(f'\n{c=}\n{d=}\n')
+    print(f"\n{c=}\n{d=}\n")
 
-    print(f'addition of matrix: {mat_add(c, d)}')
-    print(f'subtraction of matrix: {mat_sub(c, d)}')
-    print(f'scalar multiplication of matrix: {mat_smul(3, c)}')
-    print(f'hadamard product of matrix: {mat_hmul(c, d)}')
-    print(f'hadamard division of matrix: {mat_hdiv(c, d)}')
-    print(f'multiplication of matrix: {mat_mul(c, d)}')
+    print(f"addition of matrix: {mat_add(c, d)}")
+    print(f"subtraction of matrix: {mat_sub(c, d)}")
+    print(f"scalar multiplication of matrix: {mat_smul(3, c)}")
+    print(f"hadamard product of matrix: {mat_hmul(c, d)}")
+    print(f"hadamard division of matrix: {mat_hdiv(c, d)}")
+    print(f"multiplication of matrix: {mat_mul(c, d)}")
 
     e: matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-    print(f'\n{e=}\n')
+    print(f"\n{e=}\n")
 
-    print(f'trace of matrix: {mat_tr(e)}')
-    print(f'transposed matrix: {mat_trans(e)}')
+    print(f"trace of matrix: {mat_tr(e)}")
+    print(f"transposed matrix: {mat_trans(e)}")
 
     e_1: matrix = [[1, 2, 3], [2, 4, 5], [3, 5, 6]]
-    print(f'\n{e_1=}\n')
+    print(f"\n{e_1=}\n")
 
-    print(f'symmetric matrix check: {symmetric_check(e)}')
-    print(f'symmetric matrix check: {symmetric_check(e_1)}')
-    print(f'diagonal matrix elements: {diag_ele(e)}')
-    print(f'diagonal matrix: {mat_diag(e)}')
+    print(f"symmetric matrix check: {symmetric_check(e)}")
+    print(f"symmetric matrix check: {symmetric_check(e_1)}")
+    print(f"diagonal matrix elements: {diag_ele(e)}")
+    print(f"diagonal matrix: {mat_diag(e)}")
 
     f: matrix = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]]
-    print(f'\n{f=}\n')
+    print(f"\n{f=}\n")
 
-    print(f'upper bidiagonal matrix: {mat_bidiag_u(f)}')
-    print(f'lower bidiagonal matrix: {mat_bidiag_l(f)}')
+    print(f"upper bidiagonal matrix: {mat_bidiag_u(f)}")
+    print(f"lower bidiagonal matrix: {mat_bidiag_l(f)}")
 
-    print(f'identity matrix: {mat_identity(3)}')
-    print(f'zero matrix: {mat_zeros(2, 3)}')
-    print(f'zero vector: {v_zeros(3)}')
-    print(f'upper triangular matrix: {mat_tri_u(f)}')
-    print(f'lower triangular matrix: {mat_tri_l(f)}')
+    print(f"identity matrix: {mat_identity(3)}")
+    print(f"zero matrix: {mat_zeros(2, 3)}")
+    print(f"zero vector: {v_zeros(3)}")
+    print(f"upper triangular matrix: {mat_tri_u(f)}")
+    print(f"lower triangular matrix: {mat_tri_l(f)}")
 
     g: vector = [1, 2, 3, 4]
     h: vector = [5, 6, 7, 8]
-    print(f'\n{g=}\n{h=}\n')
+    print(f"\n{g=}\n{h=}\n")
 
-    print(f'toeplitz matrix: {mat_toeplitz(g, h)}')
+    print(f"toeplitz matrix: {mat_toeplitz(g, h)}")
 
     i: vector = [1, 2, 3, 4]
-    print(f'\n{i=}\n')
+    print(f"\n{i=}\n")
 
-    print(f'v_outer: {v_outer(g, h)}')
-    print(f'v_inner: {v_inner(g, h)}')
+    print(f"v_outer: {v_outer(g, h)}")
+    print(f"v_inner: {v_inner(g, h)}")
 
-    print(f'householder matrix: {householder(i)}')
+    print(f"householder matrix: {householder(i)}")
 
     x: matrix = [[1, 0, -2], [0, 5, 6], [7, 8, 0]]
     y: vector = [4, 5, 3]
-    print(f'\n{x=}\n{y=}\n')
+    print(f"\n{x=}\n{y=}\n")
 
-    print(f'creating vector augmented matrix: {mat_aug_v(x, y)}')
-    print(f'coefficient matrix: {mat_coef(mat_aug_v(x, y))}')
-    print(f'sorting augmented matrix: {mat_pivot(mat_aug_v(x, y))}')
-    print(f'Gauss elimination: {gauss_eli(x, y)}')
-    print(f'Gauss Jordan elimination: {gauss_jordan_eli(mat_aug_v(x, y))}')
-    print(f'Solve equation with Gauss-Jordan elimination: {solve_gauss(x, y)}')
-    print(f'creating matrix augmented matrix: {mat_aug_mat(x, mat_identity(len(x)))}')
-    print(f'inverse matrix: {mat_inv(x)}')
+    print(f"creating vector augmented matrix: {mat_aug_v(x, y)}")
+    print(f"coefficient matrix: {mat_coef(mat_aug_v(x, y))}")
+    print(f"sorting augmented matrix: {mat_pivot(mat_aug_v(x, y))}")
+    print(f"Gauss elimination: {gauss_eli(x, y)}")
+    print(f"Gauss Jordan elimination: {gauss_jordan_eli(mat_aug_v(x, y))}")
+    print(f"Solve equation with Gauss-Jordan elimination: {solve_gauss(x, y)}")
+    print(f"creating matrix augmented matrix: {mat_aug_mat(x, mat_identity(len(x)))}")
+    print(f"inverse matrix: {mat_inv(x)}")
 
     # j = [[5, 2, -3, 4], [5, 9, 7, 8], [11, 10, 6, 12], [13, 14, 15, 16]]
     # print(f'\n{j=}\n')
 
     # print(f'det(A): {det_rec(j)}')
 
-    print(f'norm of a: {norm(a)}')
-    print(f'cos similarity of a, b: {cos_similarity(a, b)}')
-    print(f'normalization of a: {normalize(a)}')
-    print(f'projection of a, b: {proj(a, b)}')
+    print(f"norm of a: {norm(a)}")
+    print(f"cos similarity of a, b: {cos_similarity(a, b)}")
+    print(f"normalization of a: {normalize(a)}")
+    print(f"projection of a, b: {proj(a, b)}")
 
     s: matrix = [[1, 0, 1], [0, 1, 1], [1, 2, 0]]
-    print(f'\n{s=}\n')
+    print(f"\n{s=}\n")
 
-    print(f'gram-schmidt of s: {gram_schmidt(s)}')
-    print(f'QR decomposition of s with Gram-Schmidt Process: {qr_gramschmidt(s)}')
-    print(f'QR decomposition of s with householder: {qr_householder(s)}')
+    print(f"gram-schmidt of s: {gram_schmidt(s)}")
+    print(f"QR decomposition of s with Gram-Schmidt Process: {qr_gramschmidt(s)}")
+    print(f"QR decomposition of s with householder: {qr_householder(s)}")
 
     k: matrix = [[3, 2, 1], [2, 1, 4], [1, 4, 2]]
-    print(f'\n{k=}\n')
+    print(f"\n{k=}\n")
 
-    print(f'eigenvalue and eigenvector by qr decomposition: {eig_qr(k)}')
+    print(f"eigenvalue and eigenvector by qr decomposition: {eig_qr(k)}")
 
     l: matrix = [[1, 1], [1, -1]]
-    print(f'\n{l=}\n')
+    print(f"\n{l=}\n")
 
-    print(f'orthogonal_check: {orthogonal_check(l)}')
+    print(f"orthogonal_check: {orthogonal_check(l)}")
 
     m: matrix = [[3, 6], [2, 3], [1, 2], [5, 5]]
-    print(f'\n{m=}\n')
+    print(f"\n{m=}\n")
 
-    print(f'singular value decomposition: {svd(m)}')
-    print(f'lu decomposition of k: {lu_decomp(k)}')
+    print(f"singular value decomposition: {svd(m)}")
+    print(f"lu decomposition of k: {lu_decomp(k)}")
